@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<exceptions>
+    <!-- Der Paketname von Kiwix lautet org.kiwix.kiwixmobile -->
+    <exception package="org.kiwix.kiwixmobile">
+        <!-- Gewährt den Zugriff auf alle Dateien im Speicher im Voraus -->
+        <permission name="android.permission.MANAGE_EXTERNAL_STORAGE" fixed="false"/>
+        <permission name="android.permission.READ_EXTERNAL_STORAGE" fixed="false"/>
+        <permission name="android.permission.WRITE_EXTERNAL_STORAGE" fixed="false"/>
+    </exception>
+</exceptions>

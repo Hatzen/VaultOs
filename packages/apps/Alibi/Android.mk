@@ -1,13 +1,11 @@
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := Wiki
+LOCAL_MODULE := Alibi
 LOCAL_MODULE_TAGS := optional
-LOCAL_SRC_FILES := v3.14.1-universal-standalone.apk
+LOCAL_SRC_FILES := app-arm64-v8a-release.apk
 LOCAL_MODULE_CLASS := APPS
 LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
-
-# Korrektur: Die heruntergeladene APK ist bereits signiert!
 LOCAL_CERTIFICATE := PRESIGNED
 
 include $(BUILD_PREBUILT)

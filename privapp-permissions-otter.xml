@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<permissions>
+    <privapp-permissions package="de.hartz.software.customottercontrol">
+        <permission name="android.permission.MASTER_CLEAR"/>
+        <permission name="android.permission.REBOOT" />
+        
+        <!-- Hier alle anderen permissions eintragen, die "privileged" erfordern -->
+    </privapp-permissions>
+</permissions>

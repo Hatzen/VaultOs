@@ -429,12 +429,29 @@ PRODUCT_COPY_FILES += \
 #    firmware_wlan_mac.bin_symlink
 
 
-# TODO
-# Den Standard-Launcher entfernen: Suche in device/shift/otter/device.mk oder vendor/lineage/config/common.mk nach dem Standard-Launcher (meistens Trebuchet oder Launcher3) und entferne ihn aus der Liste PRODUCT_PACKAGES.
+# FancyLauncher (KISS) is configured as an alternative launcher alongside the
+# LineageOS default launcher. The user can choose between them in Settings.
+# CustomOtterControl requires platform signing for MASTER_CLEAR and
+# BIND_ACCESSIBILITY_SERVICE permissions (factory reset + AccessibilityService).
 
 PRODUCT_PACKAGES += \
+    Alibi \
+    Briar \
     CustomOtterControl \
-    FancyLauncher
+    FancyLauncher \
+    Parannoying \
+    Stepsy \
+    Wiki
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/prebuilts/anonymousplanet.org_en_all_2026-05.zim:$(TARGET_COPY_OUT_DATA)/media/0/Android/media/org.kiwix.kiwixmobile/anonymousplanet.org_en_all_2026-05.zim
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/privapp-permissions-otter.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/privapp-permissions-otter.xml
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/default-permissions-kiwix.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default-permissions-kiwix.xml
+
 
 # Inherit from the proprietary files makefile.
 $(call inherit-product, vendor/shift/otter/otter-vendor.mk)
