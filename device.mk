@@ -80,6 +80,28 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.bluetooth.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth.xml \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth_le.xml
 
+
+# Deaktiviert die Bluetooth-Hintergrundsuche für Standorte standardmäßig
+ro.bluetooth.ble_scanning_supported=false
+
+# Dateitransfer (OPP) deaktivieren – blockiert das unbefugte Senden von Dateien
+bluetooth.profile.opp.enabled=false
+
+# Telefonbuch-Zugriff (PBAP) deaktivieren – schützt Kontakte vor dem Auslesen
+bluetooth.profile.pbap.enabled=false
+
+# SIM-Karten-Zugriff (SAP) deaktivieren
+bluetooth.profile.sap.enabled=false
+
+# Hörgeräte-Profil (ASHA) deaktivieren, falls nicht benötigt
+# bluetooth.profile.asha.enabled=false
+
+# Erweitertes Audio-Streaming (LE Audio) deaktivieren, wenn die Hardware es nicht zwingend braucht
+bluetooth.profile.bap.unicast.client.enabled=false
+
+bluetooth.profile.map.enabled=false
+
+
 # Board API level
 BOARD_SHIPPING_API_LEVEL := 30
 
@@ -130,9 +152,9 @@ PRODUCT_PACKAGES += \
     android.hardware.drm-service.clearkey
 
 # e-SIM
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/default-permissions_com.google.android.euicc.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default-permissions_com.google.android.euicc.xml \
-    $(LOCAL_PATH)/configs/privapp_allowlist_com.google.android.euicc.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/privapp_allowlist_com.google.android.euicc.xml
+#PRODUCT_COPY_FILES += \
+#    $(LOCAL_PATH)/configs/default-permissions_com.google.android.euicc.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default-permissions_com.google.android.euicc.xml \
+#    $(LOCAL_PATH)/configs/privapp_allowlist_com.google.android.euicc.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/privapp_allowlist_com.google.android.euicc.xml
 
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.telephony.euicc.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/android.hardware.telephony.euicc.xml
@@ -141,9 +163,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     fastbootd
 
-# Fingerprint
-PRODUCT_PACKAGES += \
-    android.hardware.biometrics.fingerprint@2.3-service.otter
+# Fingerprint TODO: DO not allow fingerprint as it can be forced?
+# PRODUCT_PACKAGES += \
+#    android.hardware.biometrics.fingerprint@2.3-service.otter
 
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.fingerprint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.fingerprint.xml
@@ -232,7 +254,9 @@ $(call soong_config_set_bool,livedisplay_sdm,enable_dm,false)
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/media/media_codecs_performance_yupik_iot.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance_yupik_iot.xml \
     $(LOCAL_PATH)/media/media_codecs_yupik_iot.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_yupik_iot.xml \
-    $(LOCAL_PATH)/media/media_profiles_yupik_iot.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_vendor.xml
+    $(LOCAL_PATH)/media/media_profiles_yupik_iot.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_vendor.xml \
+    $(LOCAL_PATH)/media/bootanimation.zip:$(TARGET_COPY_OUT_PRODUCT)/media/bootanimation.zip
+    # alternative: $(LOCAL_PATH)/media/bootanimation.zip:$(TARGET_COPY_OUT_SYSTEM)/media/bootanimation.zip
 
 $(call soong_config_set_bool,stagefright,target_disable_thumbnail_block_model,true)
 
@@ -254,7 +278,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_ENFORCE_RRO_TARGETS := *
 PRODUCT_PACKAGES += \
     ApertureOverlayOtter \
-    CarrierConfigResCommon \
     FrameworksResCommon \
     FrameworksResTarget \
     LineageSdkOverlayOtter \
@@ -262,10 +285,12 @@ PRODUCT_PACKAGES += \
     SettingsProviderResCommon \
     SettingsResCommon \
     SystemUIResCommon \
-    SystemUIResTarget \
-    TelephonyResCommon \
-    WifiResCommon \
-    WifiResTarget
+    SystemUIResTarget
+    # \
+    # CarrierConfigResCommon \
+    # TelephonyResCommon \
+    # WifiResCommon \
+    # WifiResTarget
 
 # Partitions
 PRODUCT_PACKAGES += \
@@ -380,28 +405,36 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/vibrator/excluded-input-devices.xml:$(TARGET_COPY_OUT_VENDOR)/etc/excluded-input-devices.xml
 
-# WiFi
-PRODUCT_PACKAGES += \
-    android.hardware.wifi-service \
-    hostapd \
-    libwifi-hal-ctrl \
-    libwifi-hal-qcom \
-    wpa_supplicant \
-    wpa_supplicant.conf
+# Disable WiFi
+#PRODUCT_PACKAGES += \
+#    android.hardware.wifi-service \
+#    hostapd \
+#    libwifi-hal-ctrl \
+#    libwifi-hal-qcom \
+#    wpa_supplicant \
+#    wpa_supplicant.conf
+#
+#PRODUCT_COPY_FILES += \
+#    frameworks/native/data/etc/android.hardware.wifi.aware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.aware.xml \
+#    frameworks/native/data/etc/android.hardware.wifi.direct.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.direct.xml \
+#    frameworks/native/data/etc/android.hardware.wifi.passpoint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.passpoint.xml \
+#    frameworks/native/data/etc/android.hardware.wifi.rtt.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.rtt.xml \
+#    frameworks/native/data/etc/android.hardware.wifi.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.xml \
+#    frameworks/native/data/etc/android.software.ipsec_tunnel_migration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.ipsec_tunnel_migration.xml \
+#    frameworks/native/data/etc/android.software.ipsec_tunnels.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.ipsec_tunnels.xml
+#
+## WiFi firmware symlink
+#PRODUCT_PACKAGES += \
+#    firmware_WCNSS_qcom_cfg.ini_symlink \
+#    firmware_wlan_mac.bin_symlink
 
-PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.hardware.wifi.aware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.aware.xml \
-    frameworks/native/data/etc/android.hardware.wifi.direct.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.direct.xml \
-    frameworks/native/data/etc/android.hardware.wifi.passpoint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.passpoint.xml \
-    frameworks/native/data/etc/android.hardware.wifi.rtt.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.rtt.xml \
-    frameworks/native/data/etc/android.hardware.wifi.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.xml \
-    frameworks/native/data/etc/android.software.ipsec_tunnel_migration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.ipsec_tunnel_migration.xml \
-    frameworks/native/data/etc/android.software.ipsec_tunnels.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.ipsec_tunnels.xml
 
-# WiFi firmware symlink
+# TODO
+# Den Standard-Launcher entfernen: Suche in device/shift/otter/device.mk oder vendor/lineage/config/common.mk nach dem Standard-Launcher (meistens Trebuchet oder Launcher3) und entferne ihn aus der Liste PRODUCT_PACKAGES.
+
 PRODUCT_PACKAGES += \
-    firmware_WCNSS_qcom_cfg.ini_symlink \
-    firmware_wlan_mac.bin_symlink
+    CustomOtterControl \
+    FancyLauncher
 
 # Inherit from the proprietary files makefile.
 $(call inherit-product, vendor/shift/otter/otter-vendor.mk)

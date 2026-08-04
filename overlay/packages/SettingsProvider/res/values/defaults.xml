@@ -1,0 +1,18 @@
+<string name="def_accessibility_services">
+    de.hartz.software.customottercontrol/de.hartz.software.customottercontrol.ShiftKeyService
+</string>
+
+<integer name="def_accessibility_enabled">1</integer>
+
+<!--
+Depending on Android branch the names differ. Some versions use:
+
+config_defaultAccessibilityServices
+
+instead.
+
+Search your tree:
+
+grep -R "default.*Accessibility" frameworks/base/packages/SettingsProvider
+
+-->

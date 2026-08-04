@@ -1,0 +1,1 @@
+https://briarproject.org/apk/briar.apk
