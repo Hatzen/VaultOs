@@ -191,5 +191,9 @@ BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX_LOCATION := 2
 # WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
 # WPA_SUPPLICANT_VERSION := VER_0_8_X
 
+# build/make/core/Makefile:148: error: overriding commands for target `out/target/product/otter/product/media/bootanimation.zip', previously defined at out/soong/installs-lineage_otter.mk:131015
+# 01:01:21 kati failed with: exit status 1
+BUILD_BROKEN_DUP_RULES := true
+
 # Inherit the proprietary files
 include vendor/shift/otter/BoardConfigVendor.mk
