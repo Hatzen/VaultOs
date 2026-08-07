@@ -452,6 +452,8 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/default-permissions-kiwix.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default-permissions-kiwix.xml
 
+# TODO Remove and add LOCAL_OPTIONAL_USES_LIBRARIES per apk
+PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
 
 # Inherit from the proprietary files makefile.
 $(call inherit-product, vendor/shift/otter/otter-vendor.mk)
