@@ -10,5 +10,6 @@ LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
 # Launcher erkannt wird und im Play Store aktualisierbar bleibt.
 LOCAL_CERTIFICATE := PRESIGNED
 LOCAL_PRIVILEGED_MODULE := true
+LOCAL_PRODUCT_MODULE := true
 
 include $(BUILD_PREBUILT)

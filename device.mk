@@ -289,10 +289,15 @@ PRODUCT_PACKAGES += \
     SettingsResCommon \
     SystemUIResCommon \
     SystemUIResTarget \
-    CarrierConfigResCommon \ # TODO REMOVE
+    CarrierConfigResCommon \
     TelephonyResCommon \
     WifiResCommon \
     WifiResTarget
+    
+    # CarrierConfigResCommon \ # TODO REMOVE
+    # TelephonyResCommon \
+    # WifiResCommon \
+    # WifiResTarget
 
 # Partitions
 PRODUCT_PACKAGES += \
@@ -441,11 +446,14 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Alibi \
     Briar \
-    CustomOtterControl \
     FancyLauncher \
     Parannoying \
     Stepsy \
     Wiki
+
+    
+# TODO: Add, leads to bootloop currently (probably wrong)
+# CustomOtterControl \
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/prebuilts/anonymousplanet.org_en_all_2026-05.zim:$(TARGET_COPY_OUT_DATA)/media/0/Android/media/org.kiwix.kiwixmobile/anonymousplanet.org_en_all_2026-05.zim
@@ -458,6 +466,15 @@ PRODUCT_COPY_FILES += \
 
 # TODO Remove and add LOCAL_OPTIONAL_USES_LIBRARIES per apk
 PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
+# Erzwingt die Aktivierung von ADB direkt beim Booten (auch bei Fehlern)
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.usb.config=adb
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.secure=0
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=0
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.debuggable=1
+
+# Erlaubt ADB-Root-Zugriff ohne Bestätigung im System
+PRODUCT_ALLOW_RUNNING_IN_SECURE_MANDATE := true
+
 
 # Inherit from the proprietary files makefile.
 $(call inherit-product, vendor/shift/otter/otter-vendor.mk)

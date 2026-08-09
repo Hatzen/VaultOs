@@ -20,4 +20,7 @@ LOCAL_PRIVILEGED_MODULE := true
 # was bei Debug-Builds oft zu Kompilierungsfehlern beim OS-Build führt.
 LOCAL_DEX_PREOPT := false
 
+# DIESE ZEILE HINZUFÜGEN: Zwingt die App auf die /product Partition; Same partition like privapp-permissions-otter.xml
+LOCAL_PRODUCT_MODULE := true
+
 include $(BUILD_PREBUILT)

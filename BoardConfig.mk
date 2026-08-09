@@ -194,7 +194,9 @@ WPA_SUPPLICANT_VERSION := VER_0_8_X
 
 # build/make/core/Makefile:148: error: overriding commands for target `out/target/product/otter/product/media/bootanimation.zip', previously defined at out/soong/installs-lineage_otter.mk:131015
 # 01:01:21 kati failed with: exit status 1
-BUILD_BROKEN_DUP_RULES := true
+# BUILD_BROKEN_DUP_RULES := true
+BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+
 
 # Inherit the proprietary files
 include vendor/shift/otter/BoardConfigVendor.mk
