@@ -470,7 +470,7 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     settings.secure.enabled_accessibility_services=de.hartz.software.customottercontrol/de.hartz.software.customottercontrol.ShiftKeyService
 PRODUCT_COPY_FILES += \
-    device/shift/otter/media/backgroup.png:$(TARGET_COPY_OUT_SYSTEM)/framework/default_wallpaper.png
+    device/shift/otter/media/background.png:$(TARGET_COPY_OUT_SYSTEM)/framework/default_wallpaper.png
 
 # Inherit from the proprietary files makefile.
 $(call inherit-product, vendor/shift/otter/otter-vendor.mk)
