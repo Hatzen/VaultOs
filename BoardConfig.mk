@@ -76,6 +76,7 @@ BOARD_KERNEL_CMDLINE := \
     androidboot.console=ttyMSM0 \
     androidboot.hardware=qcom \
     androidboot.memcg=1 \
+    androidboot.usbcontroller=a600000.dwc3 \
     cgroup.memory=nokmem,nosocket \
     ip6table_raw.raw_before_defrag=1 \
     iptable_raw.raw_before_defrag=1 \
@@ -85,8 +86,6 @@ BOARD_KERNEL_CMDLINE := \
     pcie_ports=compat \
     service_locator.enable=1 \
     swiotlb=0
-
-# androidboot.usbcontroller=a600000.dwc3 \
 
 BOARD_KERNEL_IMAGE_NAME := Image
 BOARD_KERNEL_SEPARATED_DTBO := true
@@ -143,9 +142,8 @@ TARGET_RECOVERY_UI_MARGIN_WIDTH := 32
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 
-# TODO REMOVE
 # RIL
-ENABLE_VENDOR_RIL_SERVICE := false
+ENABLE_VENDOR_RIL_SERVICE := true
 
 # Security patch level
 BOOT_SECURITY_PATCH := 2026-08-05
@@ -176,27 +174,26 @@ BOARD_AVB_VBMETA_SYSTEM_KEY_PATH := $(AVB_CUSTOM_KEY_PATH)
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX := $(shell date -d 'TZ="GMT" $(VENDOR_SECURITY_PATCH)' +%s)
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX_LOCATION := 2
 
-# TODO REMOVE
 # Wifi
-# BOARD_WLAN_DEVICE := qcwcn
-# BOARD_HOSTAPD_DRIVER := NL80211
-# BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
-# BOARD_WPA_SUPPLICANT_DRIVER := $(BOARD_HOSTAPD_DRIVER)
-# BOARD_WPA_SUPPLICANT_PRIVATE_LIB := $(BOARD_HOSTAPD_PRIVATE_LIB)
-# BOARD_WPA_SUPPLICANT_PRIVATE_LIB_EVENT := "ON"
-# WIFI_DRIVER_STATE_CTRL_PARAM := "/dev/wlan"
-# WIFI_DRIVER_STATE_OFF := "OFF"
-# WIFI_DRIVER_STATE_ON := "ON"
-# WIFI_FEATURE_HOSTAPD_11AX := true
-# WIFI_HIDL_FEATURE_AWARE := true
-# WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
-# WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
-# WPA_SUPPLICANT_VERSION := VER_0_8_X
+BOARD_WLAN_DEVICE := qcwcn
+BOARD_HOSTAPD_DRIVER := NL80211
+BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
+BOARD_WPA_SUPPLICANT_DRIVER := $(BOARD_HOSTAPD_DRIVER)
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB := $(BOARD_HOSTAPD_PRIVATE_LIB)
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB_EVENT := "ON"
+WIFI_DRIVER_STATE_CTRL_PARAM := "/dev/wlan"
+WIFI_DRIVER_STATE_OFF := "OFF"
+WIFI_DRIVER_STATE_ON := "ON"
+WIFI_FEATURE_HOSTAPD_11AX := true
+WIFI_HIDL_FEATURE_AWARE := true
+WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
+WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
+WPA_SUPPLICANT_VERSION := VER_0_8_X
 
 # build/make/core/Makefile:148: error: overriding commands for target `out/target/product/otter/product/media/bootanimation.zip', previously defined at out/soong/installs-lineage_otter.mk:131015
 # 01:01:21 kati failed with: exit status 1
 BUILD_BROKEN_DUP_RULES := true
-BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+# BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 
 
 # Inherit the proprietary files
