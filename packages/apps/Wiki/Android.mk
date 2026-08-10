@@ -10,4 +10,6 @@ LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
 # Korrektur: Die heruntergeladene APK ist bereits signiert!
 LOCAL_CERTIFICATE := PRESIGNED
 
+LOCAL_OPTIONAL_USES_LIBRARIES := androidx.window.extensions androidx.window.sidecar
+
 include $(BUILD_PREBUILT)

@@ -13,4 +13,6 @@ LOCAL_PRODUCT_MODULE := true
 LOCAL_MULTILIB := 64
 LOCAL_UNCOMPRESS_DEX := false
 
+LOCAL_OPTIONAL_USES_LIBRARIES := androidx.window.extensions androidx.window.sidecar
+
 include $(BUILD_PREBUILT)

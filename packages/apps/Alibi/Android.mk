@@ -11,6 +11,6 @@ LOCAL_CERTIFICATE := PRESIGNED
 # TODO: remove 
 # TODO Remove and add LOCAL_OPTIONAL_USES_LIBRARIES per apk
 # PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
-# androidx.camera.extensions.impl
+LOCAL_OPTIONAL_USES_LIBRARIES := androidx.camera.extensions.impl
 
 include $(BUILD_PREBUILT)

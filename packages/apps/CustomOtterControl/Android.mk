@@ -23,4 +23,7 @@ LOCAL_DEX_PREOPT := false
 # DIESE ZEILE HINZUFÜGEN: Zwingt die App auf die /product Partition; Same partition like privapp-permissions-otter.xml
 LOCAL_PRODUCT_MODULE := true
 
+
+LOCAL_OPTIONAL_USES_LIBRARIES := androidx.window.extensions androidx.window.sidecar
+
 include $(BUILD_PREBUILT)
