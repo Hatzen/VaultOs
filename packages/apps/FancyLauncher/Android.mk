@@ -8,7 +8,7 @@ LOCAL_MODULE_CLASS := APPS
 LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
 # WICHTIG: Erhält die Originalsignatur, damit die App als normaler 
 # Launcher erkannt wird und im Play Store aktualisierbar bleibt.
-LOCAL_CERTIFICATE := PRESIGNED
+LOCAL_CERTIFICATE := platform
 LOCAL_PRIVILEGED_MODULE := true
 LOCAL_PRODUCT_MODULE := true
 

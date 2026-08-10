@@ -159,6 +159,9 @@ persist.vendor.data.mode=concurrent
 # OEM Unlock
 ro.oem_unlock_supported=1
 
+# TODO: remove
+ro.adb.secure=0
+
 # Perf
 ro.vendor.extension_library=libqti-perfd-client.so
 

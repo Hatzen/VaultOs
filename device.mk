@@ -446,14 +446,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Alibi \
     Briar \
+    CustomOtterControl \
     FancyLauncher \
     Parannoying \
     Stepsy \
     Wiki
-
-    
-# TODO: Add, leads to bootloop currently (probably wrong)
-# CustomOtterControl \
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/prebuilts/anonymousplanet.org_en_all_2026-05.zim:$(TARGET_COPY_OUT_DATA)/media/0/Android/media/org.kiwix.kiwixmobile/anonymousplanet.org_en_all_2026-05.zim
@@ -464,16 +461,11 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/default-permissions-kiwix.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default-permissions-kiwix.xml
 
-# TODO Remove and add LOCAL_OPTIONAL_USES_LIBRARIES per apk
-PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
-# Erzwingt die Aktivierung von ADB direkt beim Booten (auch bei Fehlern)
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.usb.config=adb
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.secure=0
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.adb.secure=0
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.debuggable=1
 
-# Erlaubt ADB-Root-Zugriff ohne Bestätigung im System
-PRODUCT_ALLOW_RUNNING_IN_SECURE_MANDATE := true
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.setupwizard.mode=DISABLED
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.lineage.setupwizard=0
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    settings.secure.enabled_accessibility_services=de.hartz.software.customottercontrol/de.hartz.software.customottercontrol.ShiftKeyService
 
 
 # Inherit from the proprietary files makefile.
