@@ -461,7 +461,13 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/default-permissions-kiwix.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default-permissions-kiwix.xml
 
+PRODUCT_PACKAGES -= \
+    LineageSetupWizard
 
+PRODUCT_COPY_FILES += \
+    device/shift/otter/media/background.png:$(TARGET_COPY_OUT_SYSTEM)/framework/default_wallpaper.png
+
+    # TODO: Remove proven doesnt work
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.setupwizard.mode=DISABLED
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.lineage.setupwizard=0
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
@@ -469,8 +475,6 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     settings.secure.enabled_accessibility_services=de.hartz.software.customottercontrol/de.hartz.software.customottercontrol.ShiftKeyService
-PRODUCT_COPY_FILES += \
-    device/shift/otter/media/background.png:$(TARGET_COPY_OUT_SYSTEM)/framework/default_wallpaper.png
 
 # Inherit from the proprietary files makefile.
 $(call inherit-product, vendor/shift/otter/otter-vendor.mk)
