@@ -105,7 +105,7 @@ and everyone being persued or pressured for keeping their opinion.
 
 # Legal Advice
 
-Even though the Software is intended to defend against survaillance it is not intended to be used for crimes in any kind.  
+Even though the Software is intended to defend against survaillance it is not intended to be used for crimes in any way.  
 It should enforce privacy rights and defend peoples free will and mind.  
 
 
