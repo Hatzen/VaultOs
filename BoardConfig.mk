@@ -190,11 +190,13 @@ WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
 WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 
+# Needs to replace bootanimation; TODO: probably more proper with overlay..
 # build/make/core/Makefile:148: error: overriding commands for target `out/target/product/otter/product/media/bootanimation.zip', previously defined at out/soong/installs-lineage_otter.mk:131015
 # 01:01:21 kati failed with: exit status 1
 BUILD_BROKEN_DUP_RULES := true
 # BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
-
+# disable selinux to test if realm issue in /tmp/ permisson denied gets resolved
+BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 
 # Inherit the proprietary files
 include vendor/shift/otter/BoardConfigVendor.mk

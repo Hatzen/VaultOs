@@ -19,7 +19,7 @@ TARGET_SCREEN_HEIGHT := 2400
 TARGET_SCREEN_WIDTH := 1080
 
 # Device identifier. This must come after all inclusions.
-PRODUCT_NAME := lineage_otter
+PRODUCT_NAME := vault_os_otter
 PRODUCT_DEVICE := otter
 PRODUCT_BRAND := SHIFT
 PRODUCT_MODEL := SHIFTphone 8

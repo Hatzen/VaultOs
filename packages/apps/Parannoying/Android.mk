@@ -10,8 +10,8 @@ LOCAL_CERTIFICATE := PRESIGNED
 LOCAL_OPTIONAL_USES_LIBRARIES := androidx.window.extensions androidx.window.sidecar
 
 # trial not flashing it
-# LOCAL_PRODUCT_MODULE := true
-# LOCAL_MULTILIB := 64
+LOCAL_PRODUCT_MODULE := true
+LOCAL_MULTILIB := 64
 
 # Unconfirmed so far
 LOCAL_UNCOMPRESS_DEX := false
