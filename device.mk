@@ -467,14 +467,5 @@ PRODUCT_PACKAGES -= \
 PRODUCT_COPY_FILES += \
     device/shift/otter/media/background.png:$(TARGET_COPY_OUT_SYSTEM)/framework/default_wallpaper.png
 
-    # TODO: Remove proven doesnt work
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.setupwizard.mode=DISABLED
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += ro.lineage.setupwizard=0
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    lineage.secure.advanced_reboot=1
-
-PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    settings.secure.enabled_accessibility_services=de.hartz.software.customottercontrol/de.hartz.software.customottercontrol.ShiftKeyService
-
 # Inherit from the proprietary files makefile.
 $(call inherit-product, vendor/shift/otter/otter-vendor.mk)
