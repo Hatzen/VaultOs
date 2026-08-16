@@ -1,12 +1,12 @@
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := Parannoying
+LOCAL_MODULE := Office
 LOCAL_MODULE_TAGS := optional
-LOCAL_SRC_FILES := app-prod-release.apk
+LOCAL_SRC_FILES := collabora-office-mobile-25.04-snapshot-arm64-v8a-2026-02-14.apk
 LOCAL_MODULE_CLASS := APPS
 LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
-LOCAL_CERTIFICATE := platform # PRESIGNED
+LOCAL_CERTIFICATE := PRESIGNED
 LOCAL_OPTIONAL_USES_LIBRARIES := androidx.window.extensions androidx.window.sidecar
 
 # trial not flashing it

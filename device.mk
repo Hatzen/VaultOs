@@ -452,8 +452,13 @@ PRODUCT_PACKAGES += \
     Stepsy \
     Wiki
 
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/prebuilts/anonymousplanet.org_en_all_2026-05.zim:$(TARGET_COPY_OUT_PRODUCT)/media/kiwix/anonymousplanet.org_en_all_2026-05.zim
+# TODO remove doesnt seem to work..
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/prebuilts/anonymousplanet.org_en_all_2026-05.zim:$(TARGET_COPY_OUT_DATA)/media/0/Android/media/org.kiwix.kiwixmobile/anonymousplanet.org_en_all_2026-05.zim
+
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/privapp-permissions-otter.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/privapp-permissions-otter.xml
@@ -461,11 +466,16 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/default-permissions-kiwix.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/default-permissions/default-permissions-kiwix.xml
 
-PRODUCT_PACKAGES -= \
-    LineageSetupWizard
+#PRODUCT_PACKAGES -= \
+#    LineageSetupWizard
+
+# TODO Remove doesnt seem to work
+PRODUCT_COPY_FILES += \
+    device/shift/otter/media/background.png:$(TARGET_COPY_OUT_SYSTEM)/framework/default_wallpaper.png
 
 PRODUCT_COPY_FILES += \
     device/shift/otter/media/background.png:$(TARGET_COPY_OUT_SYSTEM)/framework/default_wallpaper.png
+# vendor/lineage/overlay/common/frameworks/base/core/res/res/drawable-nodpi/default_wallpaper.png
 
 # Inherit from the proprietary files makefile.
 $(call inherit-product, vendor/shift/otter/otter-vendor.mk)
