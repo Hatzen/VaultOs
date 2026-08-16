@@ -470,12 +470,15 @@ PRODUCT_COPY_FILES += \
 #    LineageSetupWizard
 
 # TODO Remove doesnt seem to work
-PRODUCT_COPY_FILES += \
-    device/shift/otter/media/background.png:$(TARGET_COPY_OUT_SYSTEM)/framework/default_wallpaper.png
+#PRODUCT_COPY_FILES += \
+#    device/shift/otter/media/background.png:$(TARGET_COPY_OUT_SYSTEM)/framework/default_wallpaper.png
 
-PRODUCT_COPY_FILES += \
-    device/shift/otter/media/background.png:$(TARGET_COPY_OUT_SYSTEM)/framework/default_wallpaper.png
+#PRODUCT_COPY_FILES += \
+#    device/shift/otter/media/background.png:$(TARGET_COPY_OUT_SYSTEM)/framework/default_wallpaper.png
 # vendor/lineage/overlay/common/frameworks/base/core/res/res/drawable-nodpi/default_wallpaper.png
+PRODUCT_PACKAGE_OVERLAYS += \
+    device/shift/otter/bto-overlay
+
 
 # Inherit from the proprietary files makefile.
 $(call inherit-product, vendor/shift/otter/otter-vendor.mk)
