@@ -8,11 +8,11 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 TARGET_SUPPORTS_OMX_SERVICE := false
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
-# Inherit from otter device
-$(call inherit-product, device/shift/otter/device.mk)
-
 # Inherit some common Lineage stuff.
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+
+# Inherit from otter device; swap to force overwrite background
+$(call inherit-product, device/shift/otter/device.mk)
 
 # Boot animation
 TARGET_SCREEN_HEIGHT := 2400

@@ -446,10 +446,21 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Alibi \
     Briar \
+    Backup \
     CustomOtterControl \
     FancyLauncher \
+    Files \
+    Insular \
+    Kernel \
+    LinuxWiki \
+    LLM \
+    Maps \
+    Office \
     Parannoying \
+    SkyMap \
     Stepsy \
+    Terminal \
+    VLC \
     Wiki
 
 

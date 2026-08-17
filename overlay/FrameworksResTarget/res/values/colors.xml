@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accent_device_default_light">#FF538E5C</color> <!-- Google Blau -->
+    <color name="accent_device_default_dark">#FF235C5C</color>  <!-- Helles Blau für Dark Mode -->
+
+    <!-- Haupt-Hintergrundfarben für das System -->
+    <color name="background_device_default_dark">#FF000000</color> <!-- Tiefschwarz für Dark Mode -->
+    <color name="background_device_default_light">#FFFFFFFF</color>
+
+    <!-- Material You Farbpaletten (A1 = Primär, A2 = Sekundär, Neutral = Hintergrund) -->
+    <!-- Diese Farbwerte überschreiben die dynamische Generierung mit festen Werten -->
+    <color name="system_accent1_500">#FF03DAC5</color> <!-- Hauptakzentfarbe -->
+    <color name="system_accent1_600">#FF018786</color> <!-- Dunklerer Akzent (gedrückt) -->
+    <color name="system_accent1_200">#FF83ACAC</color> <!-- Hellerer Akzent (Dark Mode) -->
+
+    <color name="system_neutral1_900">#FF000000</color> <!-- Hintergrund im Dark Mode -->
+    <color name="system_neutral1_50">#FFFFFFFF</color>
+</resources>
