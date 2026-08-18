@@ -452,6 +452,7 @@ PRODUCT_PACKAGES += \
     Files \
     Insular \
     Kernel \
+    KernelSu \
     LinuxWiki \
     LLM \
     Maps \
@@ -466,9 +467,6 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/prebuilts/anonymousplanet.org_en_all_2026-05.zim:$(TARGET_COPY_OUT_PRODUCT)/media/kiwix/anonymousplanet.org_en_all_2026-05.zim
-# TODO remove doesnt seem to work..
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/prebuilts/anonymousplanet.org_en_all_2026-05.zim:$(TARGET_COPY_OUT_DATA)/media/0/Android/media/org.kiwix.kiwixmobile/anonymousplanet.org_en_all_2026-05.zim
 
 
 PRODUCT_COPY_FILES += \
