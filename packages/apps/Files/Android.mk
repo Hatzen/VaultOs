@@ -7,7 +7,7 @@ LOCAL_SRC_FILES := MiXplorer_v6.71.10_B26080710.apk
 LOCAL_MODULE_CLASS := APPS
 LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
 LOCAL_CERTIFICATE := PRESIGNED
-LOCAL_OPTIONAL_USES_LIBRARIES := androidx.window.extensions androidx.window.sidecar
+LOCAL_OPTIONAL_USES_LIBRARIES := com.sec.android.app.multiwindow
 
 # trial not flashing it
 LOCAL_PRODUCT_MODULE := true
