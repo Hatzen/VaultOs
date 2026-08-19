@@ -487,7 +487,7 @@ PRODUCT_COPY_FILES += \
 # vendor/lineage/overlay/common/frameworks/base/core/res/res/drawable-nodpi/default_wallpaper.png
 PRODUCT_PACKAGE_OVERLAYS += \
     device/shift/otter/bto-overlay
-
+DEVICE_PACKAGE_OVERLAYS += device/shift/otter/bto-overlay
 
 # Inherit from the proprietary files makefile.
 $(call inherit-product, vendor/shift/otter/otter-vendor.mk)
