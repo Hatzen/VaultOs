@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Definiert die verfügbaren Netzwerk-Typen. Komplett leer lassen! -->
+    <string-array translatable="false" name="networkAttributes"></string-array>
+
+    <!-- Definiert die Radio-Attribute. Ebenfalls komplett leer lassen! -->
+    <string-array translatable="false" name="radioAttributes"></string-array>
+
+    <!-- Dem System sagen, dass es kein WLAN besitzt -->
+    <bool name="config_wlan_data_service_supported">false</bool>
+    <bool name="config_wifi_dual_sap_mode_supported">false</bool>
+
+    <!-- Dem System sagen, dass es keine Telefonie/Modem besitzt -->
+    <bool name="config_voice_capable">false</bool>
+    <bool name="config_sms_capable">false</bool>
+    <bool name="config_show_emergency_subid_only">false</bool>
+</resources>
