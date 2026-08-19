@@ -197,6 +197,8 @@ BUILD_BROKEN_DUP_RULES := true
 # BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 # disable selinux to test if realm issue in /tmp/ permisson denied gets resolved
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+# SELinux auf Permissive setzen (für Bootconfig / moderne GKI-Systeme)
+BOARD_BOOTCONFIG += androidboot.selinux=permissive
 
 # Inherit the proprietary files
 include vendor/shift/otter/BoardConfigVendor.mk

@@ -7,7 +7,6 @@ LOCAL_SRC_FILES := KernelSU_Next_v3.3.0_33214-release.apk
 LOCAL_MODULE_CLASS := APPS
 LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
 LOCAL_CERTIFICATE := PRESIGNED
-LOCAL_OPTIONAL_USES_LIBRARIES := androidx.window.extensions androidx.window.sidecar
 
 # trial not flashing it
 LOCAL_PRODUCT_MODULE := true
@@ -16,5 +15,7 @@ LOCAL_MULTILIB := 64
 # Unconfirmed so far
 LOCAL_UNCOMPRESS_DEX := false
 LOCAL_DEX_PREOPT := false
+# TODO: remove and properly define LOCAL_OPTIONAL_USES_LIBRARIES instead
+LOCAL_ENFORCE_USES_LIBRARIES := false
 
 include $(BUILD_PREBUILT)

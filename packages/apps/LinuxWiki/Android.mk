@@ -16,5 +16,7 @@ LOCAL_MULTILIB := 64
 # Unconfirmed so far
 LOCAL_UNCOMPRESS_DEX := false
 LOCAL_DEX_PREOPT := false
+# TODO: remove and properly define LOCAL_OPTIONAL_USES_LIBRARIES instead
+LOCAL_ENFORCE_USES_LIBRARIES := false
 
 include $(BUILD_PREBUILT)

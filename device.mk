@@ -452,7 +452,7 @@ PRODUCT_PACKAGES += \
     Files \
     Insular \
     Kernel \
-    KernelSu \
+    KernelSU \
     LinuxWiki \
     LLM \
     Maps \

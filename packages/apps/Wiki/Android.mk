@@ -12,4 +12,7 @@ LOCAL_CERTIFICATE := PRESIGNED
 
 LOCAL_OPTIONAL_USES_LIBRARIES := androidx.window.extensions androidx.window.sidecar
 
+# TODO: remove and properly define LOCAL_OPTIONAL_USES_LIBRARIES instead
+LOCAL_ENFORCE_USES_LIBRARIES := false
+
 include $(BUILD_PREBUILT)
