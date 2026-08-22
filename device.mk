@@ -450,21 +450,36 @@ PRODUCT_PACKAGES += \
     CustomOtterControl \
     FancyLauncher \
     Files \
-    Insular \
-    Kernel \
-    KernelSU \
-    LinuxWiki \
     LLM \
     Maps \
     Office \
     Parannoying \
-    SkyMap \
     Stepsy \
     Terminal \
     VLC \
     Wiki
 
+# Reduce load on system partion
+    # Insular \
+    # Kernel \
+    # KernelSU \
+    # LinuxWiki \
+    # SkyMap \
 
+
+#
+#PRODUCT_COPY_FILES += \
+#    $(LOCAL_PATH)/prebuilts/anonymousplanet.org_en_all_2026-05.zim:$(TARGET_COPY_OUT_PRODUCT)/media/kiwix/anonymousplanet.org_en_all_2026-05.zim
+
+# Component Override für Netzwerksperre kopieren
+PRODUCT_COPY_FILES += \
+    device/shift/otter/component-override.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/sysconfig/component-override.xml
+
+# Das Hintergrund-Kopierskript nach /vendor/bin/ bringen
+PRODUCT_COPY_FILES += \
+    device/shift/otter/copy_assets.sh:$(TARGET_COPY_OUT_VENDOR)/bin/copy_assets.sh
+
+# Deine Kiwix ZIM-Datei in den Product-Speicher einbetten
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/prebuilts/anonymousplanet.org_en_all_2026-05.zim:$(TARGET_COPY_OUT_PRODUCT)/media/kiwix/anonymousplanet.org_en_all_2026-05.zim
 

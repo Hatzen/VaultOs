@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bindings>
+    <!-- Deaktiviert das komplette WLAN-Subsystem auf Paket-Ebene -->
+    <apex-component-override package="com.android.wifi" enabled="false" />
+    
+    <!-- Deaktiviert die Mobilfunk- und Telefonie-Dienste vollständig -->
+    <apex-component-override package="com.android.telephony" enabled="false" />
+    
+    <!-- Deaktiviert das Bluetooth-Subsystem (falls gewünscht, sonst Zeile löschen)
+    <apex-component-override package="com.android.btservices" enabled="false" /> -->
+</bindings>

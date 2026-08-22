@@ -252,12 +252,22 @@ on post-fs-data
     #Create folder of camera
     mkdir /data/vendor/camera 0770 camera camera
 
-    # Copy Kiwix ZIM file from product to shared storage
-    mkdir /data/media/0/Android/media/org.kiwix.kiwixmobile 0771 system system
-    copy /product/media/kiwix/anonymousplanet.org_en_all_2026-05.zim /data/media/0/Android/media/org.kiwix.kiwixmobile/anonymousplanet.org_en_all_2026-05.zim
-    chown system system /data/media/0/Android/media/org.kiwix.kiwixmobile/anonymousplanet.org_en_all_2026-05.zim
-    chmod 0664 /data/media/0/Android/media/org.kiwix.kiwixmobile/anonymousplanet.org_en_all_2026-05.zim
+    # Copy Kiwix ZIM file from product to shared storage TODO: remove as it probably takes to long
+    # mkdir /data/media/0/Android/media/org.kiwix.kiwixmobile 0771 system system
+    # copy /product/media/kiwix/anonymousplanet.org_en_all_2026-05.zim /data/media/0/Android/media/org.kiwix.kiwixmobile/anonymousplanet.org_en_all_2026-05.zim
+    # chown system system /data/media/0/Android/media/org.kiwix.kiwixmobile/anonymousplanet.org_en_all_2026-05.zim
+    # chmod 0664 /data/media/0/Android/media/org.kiwix.kiwixmobile/anonymousplanet.org_en_all_2026-05.zim
+    
+    service copy_assets /vendor/bin/sh /vendor/bin/copy_assets.sh
+        class late_start
+        user root
+        group root media_rw
+        oneshot
+        disabled
 
+    # Das Skript erst starten, wenn Android meldet, dass der Bootvorgang abgeschlossen ist
+    on property:sys.boot_completed=1
+        start copy_assets
 
     #Create directory for tftp
     mkdir /data/vendor/tombstones 0771 system system

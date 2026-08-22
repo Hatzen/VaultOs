@@ -14,7 +14,7 @@ LOCAL_PRODUCT_MODULE := true
 LOCAL_MULTILIB := 64
 
 # Unconfirmed so far
-LOCAL_UNCOMPRESS_DEX := false
-LOCAL_DEX_PREOPT := false
+LOCAL_UNCOMPRESS_DEX := true
+LOCAL_DEX_PREOPT := true
 
 include $(BUILD_PREBUILT)
