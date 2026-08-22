@@ -1,0 +1,75 @@
+diff --git a/res/xml/top_level_settings.xml b/res/xml/top_level_settings.xml
+index 975a97a3aa4..a092c94fe94 100644
+--- a/res/xml/top_level_settings.xml
++++ b/res/xml/top_level_settings.xml
+@@ -26,31 +26,6 @@
+         android:layout="@layout/settingslib_untitled_preference_category">
+     </PreferenceCategory>
+
+-    <PreferenceCategory
+-        android:order="-130"
+-        android:key="top_level_connectivity_category"
+-        android:layout="@layout/settingslib_expressive_untitled_preference_category">
+-        <com.android.settings.widget.HomepagePreference
+-            android:fragment="com.android.settings.network.NetworkDashboardFragment"
+-            android:icon="@drawable/ic_settings_wireless_filled"
+-            android:key="top_level_network"
+-            android:order="-20"
+-            android:title="@string/network_dashboard_title"
+-            android:summary="@string/summary_placeholder"
+-            settings:highlightableMenuKey="@string/menu_key_network"
+-            settings:controller="com.android.settings.network.TopLevelNetworkEntryPreferenceController"/>
+-
+-        <com.android.settings.widget.HomepagePreference
+-            android:fragment="com.android.settings.connecteddevice.ConnectedDeviceDashboardFragment"
+-            android:icon="@drawable/ic_devices_other_filled"
+-            android:key="top_level_connected_devices"
+-            android:order="-10"
+-            android:title="@string/connected_devices_dashboard_title"
+-            android:summary="@string/connected_devices_dashboard_default_summary"
+-            settings:highlightableMenuKey="@string/menu_key_connected_devices"
+-            settings:controller="com.android.settings.connecteddevice.TopLevelConnectedDevicesPreferenceC
+ontroller"/>
+-    </PreferenceCategory>
+-
+     <PreferenceCategory
+         android:order="-120"
+         android:key="top_level_personalize_category"
+@@ -264,4 +239,4 @@
+             settings:controller="com.android.settings.support.SupportPreferenceController"/>
+     </PreferenceCategory>
+
+-</PreferenceScreen>
+\ No newline at end of file
++</PreferenceScreen>
+(END)
+-            android:fragment="com.android.settings.network.NetworkDashboardFragment"
+-            android:icon="@drawable/ic_settings_wireless_filled"
+-            android:key="top_level_network"
+-            android:order="-20"
+-            android:title="@string/network_dashboard_title"
+-            android:summary="@string/summary_placeholder"
+-            settings:highlightableMenuKey="@string/menu_key_network"
+-            settings:controller="com.android.settings.network.TopLevelNetworkEntryPreferenceController"/>
+-
+-        <com.android.settings.widget.HomepagePreference
+-            android:fragment="com.android.settings.connecteddevice.ConnectedDeviceDashboardFragment"
+-            android:icon="@drawable/ic_devices_other_filled"
+-            android:key="top_level_connected_devices"
+-            android:order="-10"
+-            android:title="@string/connected_devices_dashboard_title"
+-            android:summary="@string/connected_devices_dashboard_default_summary"
+-            settings:highlightableMenuKey="@string/menu_key_connected_devices"
+-            settings:controller="com.android.settings.connecteddevice.TopLevelConnectedDevicesPreferenceController"/>
+-    </PreferenceCategory>
+-
+     <PreferenceCategory
+         android:order="-120"
+         android:key="top_level_personalize_category"
+@@ -264,4 +239,4 @@
+             settings:controller="com.android.settings.support.SupportPreferenceController"/>
+     </PreferenceCategory>
+
+-</PreferenceScreen>
+\ No newline at end of file
++</PreferenceScreen>
