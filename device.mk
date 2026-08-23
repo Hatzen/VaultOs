@@ -449,13 +449,11 @@ PRODUCT_PACKAGES += \
     Backup \
     CustomOtterControl \
     FancyLauncher \
-    Files \ 
+    Files \
     LLM \
     Maps \
     Office \
     Parannoying \
-    Insular \
-    Kernel \
     KernelSU \
     Stepsy \
     Terminal \
@@ -470,10 +468,11 @@ PRODUCT_PACKAGES += \
     # SkyMap \
 
 # DONT WORK as other products
-#    Maps \
-#    VLC \
+#    Maps \#
 #    Parannoying \
+#    VLC \
 #    Files \ 
+#    KernelSU \
 
 #
 #PRODUCT_COPY_FILES += \

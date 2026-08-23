@@ -6,7 +6,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_SRC_FILES := OrganicMaps-26072306-web-release.apk
 LOCAL_MODULE_CLASS := APPS
 LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
-LOCAL_CERTIFICATE := PRESIGNED
+LOCAL_CERTIFICATE := platform
 LOCAL_OPTIONAL_USES_LIBRARIES := androidx.window.extensions androidx.window.sidecar
 
 # trial not flashing it
