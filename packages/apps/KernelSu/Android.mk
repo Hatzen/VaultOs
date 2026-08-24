@@ -9,14 +9,18 @@ LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
 LOCAL_CERTIFICATE := platform
 LOCAL_REPLACE_PREBUILT_APK_INSTALLED := $(LOCAL_PATH)/$(LOCAL_SRC_FILES)
 
-# trial not flashing it
-LOCAL_PRODUCT_MODULE := true
+
+
+# Erzwingt das Extrahieren der libkernelsu.so aus der APK in das System-Image
+# LOCAL_EXTRACT_APK_EDGES := true
+#LOCAL_PRODUCT_MODULE := true
+# try fix dlopen failed: library "libkernelsu.so" not found
+LOCAL_SYSTEM_MODULE := true
+
 LOCAL_MULTILIB := 64
 
-# Unconfirmed so far
 LOCAL_UNCOMPRESS_DEX := true
 LOCAL_DEX_PREOPT := true
-# TODO: remove and properly define LOCAL_OPTIONAL_USES_LIBRARIES instead
 LOCAL_ENFORCE_USES_LIBRARIES := false
 
 include $(BUILD_PREBUILT)
