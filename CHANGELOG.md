@@ -9,14 +9,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Planned
-- Standalone zero-dependency cross-platform installer (Windows & Linux).
 - Automated in-OS OTA update checker & Ed25519 verification client.
 - European sovereign mirror setup (Hetzner, Germany).
 - Hardware attestation & bootloader re-locking with custom AVB root-of-trust.
 
 ---
 
-## [1.0.0] - 2026-11-14
+## [1.0.1] - 2026-11-14
+
+### Fixed
+- **Critical — `CustomOtterControl` False-Positive Wipe & Wakelock Fixes**:
+  - Fixed `CellularConnectionDetector` returning `true` when `READ_PHONE_STATE` was not granted and fixed invalid `TELEPHONY_SERVICE` -> `SubscriptionManager` cast.
+  - Gated automated factory-reset behind an opt-in preference (`default = false`) in `ConnectionGuard`, preventing accidental wipes on service launch.
+  - Resolved JobScheduler ID collision (`0` vs `1001`/`1002`), removed forced 2-second `overrideDeadline` polling, and called `jobFinished()` in `UsbSchedulerService`, `NetworkSchedulerService`, and `BluetoothNfcGuardService`.
+  - Pre-granted runtime permissions for `CustomOtterControl` and switched prebuilt packaging to signed release APKs (`app-release.apk`).
+- **Critical — Kernel USB Air-Gap Restoration (`WITH_USB_DEBUG`)**:
+  - Re-disabled `dwc3@a600000` in `yupik-usb.dtsi` and guarded `dwc3_msm_probe()` behind `!defined(CONFIG_VAULTOS_USB_DEBUG)`.
+  - Added compile-time `WITH_USB_DEBUG=true` (`CONFIG_VAULTOS_USB_DEBUG`) toggle in `BoardConfig.mk` and `Kconfig` to generate separate `boot-usb-debug.img` / `vendor_boot-usb-debug.img` developer images while keeping production releases hardware-airgapped.
+- **Battery Optimization & Dead Radio/Wi-Fi Service Removal**:
+  - Set `ro.radio.noril=yes`, `ro.vendor.radio.noril=yes`, and `config.disable_telephony=true`, omitted telephony/Wi-Fi feature XMLs from `device.mk`, blocklisted `rmnet_*.ko`, and stopped background RIL/CNSS/LOWI/Wificond polling daemons (`init.class_main.sh`, `init.target.rc`, `init.qcom.rc`, `init.vaultos.rc`).
+- **Custom Bootanimation & Default Wallpaper Enforcement**:
+  - Set `TARGET_BOOTANIMATION := vendor/vaultos/media/bootanimation.zip` in `BoardConfig.mk`.
+  - Removed `theme:` nesting from `FrameworkResVaultOs`, `SystemUIResVaultOs`, and `SettingsProviderResVaultOs` so Android 16 scans static RROs in `/product/overlay/`, and populated all density buckets for `default_wallpaper.png`.
+
+### Added
+- **Multi-Root Workspace & Prebuilt Release Pipeline**:
+  - Added `VaultOs.code-workspace` for unified Git source control across all 9 VaultOs repositories.
+  - Added `tools/pipeline/update_prebuilt_apps.ps1` and `.sh` to compile and stage release APKs for `CustomOtterControl` and `ParAnnoying`.
+
+---
+
+## [1.0.0] - 2026-11-14 *(Pre-Release — Superseded by 1.0.1)*
 
 ### Added
 - **Initial Official VaultOs Release** for the **SHIFTphone 8 (`otter`)**.

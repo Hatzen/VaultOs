@@ -116,6 +116,36 @@ lunch vaultos_otter-bp4a-userdebug
 m bacon -j$(nproc)
 ```
 
+### ⚡ Built-in Root & KernelSU Toggle Flag
+
+VaultOs includes native, out-of-the-box root powered by **KernelSU-Next** with zero post-flash steps, Magisk patching, or custom recovery workflows. Root is fully toggleable at compile time via the `WITH_KSU` flag:
+
+* **Build with Root (Default)**:
+  Compiles the `KernelSU-Next` driver into the kernel via non-GKI manual hooks (`CONFIG_KSU_MANUAL_HOOK=y`) and pre-installs the presigned KernelSU Manager app in `/product/app/KernelSU`:
+  ```bash
+  m bacon -j$(nproc)
+  ```
+
+* **Build without Root (Stock Non-Rooted Kernel)**:
+  Pass `WITH_KSU=false` in the build environment to generate a 100% stock kernel without root hooks and omit the KernelSU management app:
+  ```bash
+  WITH_KSU=false m bacon -j$(nproc)
+  ```
+
+### 🔒 Hardware Air-Gap & USB Debug Toggle (`WITH_USB_DEBUG`)
+
+Production VaultOs builds enforce a hardware-level air-gap in the kernel and DeviceTree by disabling the primary USB controller (`dwc3@a600000`), Wi-Fi (`icnss2`), and cellular baseband (`pil_modem`). For device bring-up, logcat capture, and debugging, you can compile developer `boot.img` / `vendor_boot.img` images with USB data enabled:
+
+* **Air-Gapped Production Build (Default)**:
+  ```bash
+  m bacon -j$(nproc)
+  ```
+
+* **Developer USB-Debug Boot Image (`boot-usb-debug.img`)**:
+  ```bash
+  WITH_USB_DEBUG=true m bootimage vendorbootimage -j$(nproc)
+  ```
+
 ---
 
 ## 📜 License & Compliance
