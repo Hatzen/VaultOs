@@ -105,3 +105,4 @@ m bacon -j$(nproc)
 VaultOs open-source components are licensed under the [Apache License, Version 2.0](LICENSE).  
 The Linux kernel is licensed under [GNU GPL v2](https://www.gnu.org/licenses/gpl-2.0.html).  
 LineageOS components remain under their respective upstream licenses.
+
