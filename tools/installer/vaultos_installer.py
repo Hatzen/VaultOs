@@ -65,12 +65,15 @@ def print_security_warning():
 
 def run_cmd(cmd_list):
     try:
-        res = subprocess.run(cmd_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
-        return res.stdout.strip()
-    except subprocess.CalledProcessError as e:
-        return None
+        res = subprocess.run(cmd_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if res.returncode != 0:
+            return None
+        combined = (res.stdout + " " + res.stderr).strip()
+        return combined
     except FileNotFoundError:
         return "NOT_FOUND"
+    except Exception:
+        return None
 
 def check_tools():
     print("[*] Checking platform tools (adb, fastboot)...")
@@ -243,7 +246,10 @@ def main():
     print_banner()
     print_security_warning()
     
-    confirm = input("Do you wish to proceed with downloading and flashing VaultOs? [y/N]: ").strip().lower()
+    if "-y" in sys.argv or "--yes" in sys.argv:
+        confirm = 'y'
+    else:
+        confirm = input("Do you wish to proceed with downloading and flashing VaultOs? [y/N]: ").strip().lower()
     if confirm != 'y':
         print("Aborted by user.")
         sys.exit(0)
@@ -251,7 +257,12 @@ def main():
     check_tools()
     
     # Setup working directory for downloads
-    work_dir = os.path.join(os.path.expanduser("~"), ".vaultos", "downloads", f"v{VERSION}")
+    work_dir = None
+    for i, arg in enumerate(sys.argv):
+        if arg in ["--dir", "-d"] and i + 1 < len(sys.argv):
+            work_dir = os.path.abspath(sys.argv[i + 1])
+    if not work_dir:
+        work_dir = os.path.join(os.path.expanduser("~"), ".vaultos", "downloads", f"v{VERSION}")
     os.makedirs(work_dir, exist_ok=True)
 
     release_data = get_latest_release_info()
@@ -278,14 +289,18 @@ def main():
         if not state:
             time.sleep(3)
 
-    if state == "adb":
+    if state in ["adb", "recovery"]:
         print("[*] Rebooting device into Fastboot bootloader...")
         subprocess.run(["adb", "reboot", "bootloader"])
-        time.sleep(5)
-    elif state == "recovery":
-        print("[*] Rebooting from Recovery into Fastboot bootloader...")
-        subprocess.run(["adb", "reboot", "bootloader"])
-        time.sleep(5)
+        print("[*] Waiting for device to enter Fastboot mode...")
+        for _ in range(30):
+            time.sleep(2)
+            fb = run_cmd(["fastboot", "devices"])
+            if fb and "fastboot" in fb:
+                print("    -> Device reached Fastboot mode.")
+                break
+        else:
+            print("[!] Timeout waiting for Fastboot mode. Please ensure phone is connected.")
 
     verify_hardware_model()
     flash_device(work_dir)
