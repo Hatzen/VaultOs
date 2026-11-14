@@ -40,9 +40,26 @@ VaultOs Platform
 
 ---
 
-## ⚡ Quick Start: Flashing VaultOs
+## ⚡ Flashing VaultOs
 
-### Prerequisites
+### Option A: Automated Standalone Installer (Recommended)
+
+VaultOs includes a zero-dependency, cross-platform CLI installer for Linux, macOS, and Windows that handles downloads, cryptographic SHA-256 validation, device codename assertion, and guided flashing automatically:
+
+```bash
+# 1. Clone repository
+git clone https://github.com/Hatzen/VaultOs.git
+cd VaultOs
+
+# 2. Run the installer (requires python 3.8+ and platform-tools in PATH)
+python tools/installer/vaultos_installer.py
+```
+
+---
+
+### Option B: Manual Flashing Steps
+
+#### Prerequisites
 * Unlocked bootloader on your SHIFTphone 8 (`fastboot getvar unlocked` -> `yes`).
 * Android platform-tools (`adb` and `fastboot`).
 * Official release files from the [Releases](https://github.com/Hatzen/VaultOs/releases) page:
@@ -50,8 +67,9 @@ VaultOs Platform
   * `vendor_boot.img`
   * `dtbo.img`
   * `vaultos_otter-ota.zip`
+  * `SHA256SUMS`
 
-### Flashing Steps
+#### Manual Steps
 1. **Reboot to Fastboot**:
    ```bash
    adb reboot bootloader
