@@ -1,0 +1,14 @@
+# Local environment & secrets (never commit)
+.env
+.env.*
+!.env.example
+*.local
+
+# IDE & OS files
+.idea/
+.vscode/
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+Thumbs.db

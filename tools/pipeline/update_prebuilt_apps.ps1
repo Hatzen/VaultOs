@@ -4,16 +4,46 @@
 .DESCRIPTION
     Compiles CustomOtterControl and ParAnnoying as Android release APKs
     and stages them into android_vendor_vaultos/apps/.
+    Reads local path overrides from <repo_root>/.env or environment variables.
 #>
 param(
-    [string]$CustomOtterDir = "C:\Users\kaiha\AndroidStudioProjects\CustomOtterControl",
-    [string]$ParAnnoyingDir = "C:\Users\kaiha\StudioProjects\ParAnnoying",
-    [string]$VendorVaultOsDir = "C:\Users\kaiha\Desktop\projects\android_vendor_vaultos",
+    [string]$CustomOtterDir,
+    [string]$ParAnnoyingDir,
+    [string]$VendorVaultOsDir,
     [switch]$SkipCustomOtter,
     [switch]$SkipParAnnoying
 )
 
 $ErrorActionPreference = "Stop"
+
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$RepoRoot = (Resolve-Path (Join-Path $ScriptDir "..\..")).Path
+$WorkspaceRoot = (Resolve-Path (Join-Path $RepoRoot "..")).Path
+
+# Load .env from repo root if present (without overriding explicit env vars)
+$DotEnv = Join-Path $RepoRoot ".env"
+if (Test-Path $DotEnv) {
+    Get-Content $DotEnv | ForEach-Object {
+        $line = $_.Trim()
+        if ($line -and -not $line.StartsWith("#") -and $line -match '^([A-Za-z_][A-Za-z0-9_]*)=(.*)$') {
+            $k = $matches[1].Trim()
+            $v = $matches[2].Trim().Trim('"').Trim("'")
+            if (-not [Environment]::GetEnvironmentVariable($k, "Process")) {
+                [Environment]::SetEnvironmentVariable($k, $v, "Process")
+            }
+        }
+    }
+}
+
+function Resolve-RepoPath([string]$ParamValue, [string]$EnvKey, [string]$DefaultRelToRepo) {
+    $raw = if ($ParamValue) { $ParamValue } elseif ([Environment]::GetEnvironmentVariable($EnvKey, "Process")) { [Environment]::GetEnvironmentVariable($EnvKey, "Process") } else { $DefaultRelToRepo }
+    if ([System.IO.Path]::IsPathRooted($raw)) { return $raw }
+    return [System.IO.Path]::GetFullPath((Join-Path $RepoRoot $raw))
+}
+
+$CustomOtterDir = Resolve-RepoPath $CustomOtterDir "CUSTOM_OTTER_DIR" "..\..\AndroidStudioProjects\CustomOtterControl"
+$ParAnnoyingDir = Resolve-RepoPath $ParAnnoyingDir "PARANNOYING_DIR" "..\..\StudioProjects\ParAnnoying"
+$VendorVaultOsDir = Resolve-RepoPath $VendorVaultOsDir "VENDOR_VAULTOS_DIR" "..\android_vendor_vaultos"
 
 function Build-And-Stage {
     param(
@@ -26,7 +56,7 @@ function Build-And-Stage {
     )
 
     if (-not (Test-Path $ProjectDir)) {
-        throw "[$Name] Project directory not found: $ProjectDir"
+        throw "[$Name] Project directory not found: $ProjectDir (configure .env from .env.example)"
     }
 
     Write-Host ""

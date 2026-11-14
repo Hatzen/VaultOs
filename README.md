@@ -148,6 +148,32 @@ Production VaultOs builds enforce a hardware-level air-gap in the kernel and Dev
 
 ---
 
+## ⚙️ Developer Setup & `.env` Configuration
+
+Local workstation paths, SSH hosts, and optional publishing tokens are kept strictly outside Git in a local `.env` file (ignored via `.gitignore`).
+
+1. **Create your local `.env` from the template**:
+   ```bash
+   cp .env.example .env
+   ```
+2. **Adjust paths for your machine** in `.env`:
+   * `CUSTOM_OTTER_DIR` — Path to local `CustomOtterControl` Android Studio project
+   * `PARANNOYING_DIR` — Path to local `ParAnnoying` Android Studio project
+   * `VENDOR_VAULTOS_DIR` — Path to `android_vendor_vaultos`
+   * `BUILD_SSH_HOST`, `BUILD_SSH_USER`, `BUILD_LIMA_INSTANCE`, `BUILD_REMOTE_ROOT` — Optional remote AOSP builder settings
+3. **Build and stage signed release APKs** into `android_vendor_vaultos/apps/`:
+   * **Windows (PowerShell)**:
+     ```powershell
+     powershell -ExecutionPolicy Bypass -File .\tools\pipeline\update_prebuilt_apps.ps1
+     ```
+   * **Linux / macOS**:
+     ```bash
+     ./tools/pipeline/update_prebuilt_apps.sh
+     ```
+4. **Open full multi-repository IDE view**: Open `VaultOs.code-workspace` via **File -> Open Workspace from File...** to view all 9 VaultOs repositories in Git Source Control.
+
+---
+
 ## 📜 License & Compliance
 
 VaultOs open-source components are licensed under the [Apache License, Version 2.0](LICENSE).  

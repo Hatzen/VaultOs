@@ -3,16 +3,39 @@
 # VaultOs Prebuilt Apps Release Pipeline (Linux / macOS)
 # Compiles CustomOtterControl and ParAnnoying as Android release APKs
 # and stages them into android_vendor_vaultos/apps/.
+# Reads optional overrides from <repo_root>/.env or environment variables.
 #
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-WORKSPACE_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
-CUSTOM_OTTER_DIR="${CUSTOM_OTTER_DIR:-${WORKSPACE_ROOT}/CustomOtterControl}"
-PARANNOYING_DIR="${PARANNOYING_DIR:-${HOME}/StudioProjects/ParAnnoying}"
-VENDOR_VAULTOS_DIR="${VENDOR_VAULTOS_DIR:-${WORKSPACE_ROOT}/android_vendor_vaultos}"
+# Load .env from repo root if present (without clobbering already-exported vars)
+if [[ -f "${REPO_ROOT}/.env" ]]; then
+    while IFS='=' read -r raw_key raw_val || [[ -n "${raw_key:-}" ]]; do
+        line="${raw_key%%#*}"
+        [[ -z "${line// }" ]] && continue
+        key="$(echo "${raw_key}" | xargs)"
+        val="$(echo "${raw_val:-}" | tr -d '\r' | sed -E 's/^["'\'']|["'\'']$//g')"
+        if [[ -n "${key}" && -z "${!key:-}" ]]; then
+            export "${key}=${val}"
+        fi
+    done < "${REPO_ROOT}/.env"
+fi
+
+resolve_path() {
+    local val="$1"
+    if [[ "${val}" = /* ]]; then
+        echo "${val}"
+    else
+        echo "${REPO_ROOT}/${val}"
+    fi
+}
+
+CUSTOM_OTTER_DIR="$(resolve_path "${CUSTOM_OTTER_DIR:-../../AndroidStudioProjects/CustomOtterControl}")"
+PARANNOYING_DIR="$(resolve_path "${PARANNOYING_DIR:-../../StudioProjects/ParAnnoying}")"
+VENDOR_VAULTOS_DIR="$(resolve_path "${VENDOR_VAULTOS_DIR:-../android_vendor_vaultos}")"
 
 build_and_stage() {
     local name="$1"
@@ -22,7 +45,7 @@ build_and_stage() {
     local dest_path="$5"
 
     if [[ ! -d "${project_dir}" ]]; then
-        echo "ERROR: [${name}] Directory not found: ${project_dir}" >&2
+        echo "ERROR: [${name}] Directory not found: ${project_dir} (copy .env.example to .env and configure paths)" >&2
         exit 1
     fi
 
