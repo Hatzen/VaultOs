@@ -21,7 +21,13 @@ Modern smartphones are built on continuous data extraction, opaque telemetry, re
 
 | Device | Codename | Platform | Android Version | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **SHIFTphone 8** | `otter` | Qualcomm Yupik / QCM6490 | **16 (BP4A / LineageOS 23.2)** | **Stable (v1.0.0)** |
+| **SHIFTphone 8** | `otter` | Qualcomm Yupik / QCM6490 | **16 (BP4A / LineageOS 23.2)** | **Active (`v1.0.2` AVB 2.0)** |
+
+> [!WARNING]
+> **DISCLAIMER — Unofficial Builds vs. Locked Bootloader Support**
+>
+> * **Unofficial / Unsigned Builds (including legacy releases `v1.0.0` & `v1.0.1`)**: Any unofficial build compiled without a private `avb_custom_key.pem` and `WITH_AVB=true` (i.e. `vbmeta flags=3` / AOSP public `testkey`) is an **unofficial unsigned build that CANNOT run with a locked bootloader**. Executing `fastboot flashing lock` on such a build will fail Verified Boot (`device is corrupt`).
+> * **Production `v1.0.2`+ Builds (`WITH_AVB=true` default)**: Built with Android Verified Boot 2.0 enabled (`vbmeta flags=0`) and signed with the VaultOs custom AVB key (`avb_custom_key.bin`). These builds **can** run with a locked bootloader once you enroll `avb_custom_key.bin` while unlocked, complete a full first boot, and verify **`CustomOtterControl` → Bootloader-Lock Dry-Run** reports `✅ BEREIT FUER CLOSED BOOTLOADER` before running `fastboot flashing lock`.
 
 ---
 
@@ -62,12 +68,17 @@ python tools/installer/vaultos_installer.py
 #### Prerequisites
 * Unlocked bootloader on your SHIFTphone 8 (`fastboot getvar unlocked` -> `yes`).
 * Android platform-tools (`adb` and `fastboot`).
-* Official release files from the [Releases](https://github.com/Hatzen/VaultOs/releases) page:
+* Release files from the [Releases](https://github.com/Hatzen/VaultOs/releases) page:
   * `boot.img`
   * `vendor_boot.img`
   * `dtbo.img`
+  * `vbmeta.img` & `vbmeta_system.img` (`v1.0.2`+)
+  * `avb_custom_key.bin` (`v1.0.2`+ custom AVB 2.0 public key)
   * `vaultos_otter-ota.zip`
   * `SHA256SUMS`
+
+> [!CAUTION]
+> **Check Release Signature Before Locking Bootloader**: Legacy releases (`v1.0.0`, `v1.0.1`) and self-compiled builds without `WITH_AVB=true` are **unofficial unsigned builds that cannot run with a locked bootloader**. Never lock the bootloader on those builds.
 
 #### Manual Steps
 1. **Reboot to Fastboot**:
@@ -79,18 +90,25 @@ python tools/installer/vaultos_installer.py
    fastboot flash boot boot.img
    fastboot flash vendor_boot vendor_boot.img
    fastboot flash dtbo dtbo.img
+   fastboot flash vbmeta vbmeta.img
+   fastboot flash vbmeta_system vbmeta_system.img
    ```
-3. **Reboot to Recovery**:
+3. **Optional (only for `v1.0.2`+ AVB Lock-Ready builds) — Enroll Custom AVB Key**:
+   ```bash
+   fastboot flash avb_custom_key avb_custom_key.bin
+   ```
+4. **Reboot to Recovery**:
    ```bash
    fastboot reboot recovery
    ```
-4. **Sideload Full OS**:
+5. **Sideload Full OS**:
    * On device screen: Select **Apply update** -> **Apply from ADB**.
    * Run on host:
      ```bash
      adb sideload vaultos_otter-ota.zip
      ```
-5. *(First install only)*: In recovery, select **Factory reset / Format data** $\rightarrow$ **Reboot system now**.
+6. *(First install only)*: In recovery, select **Factory reset / Format data** $\rightarrow$ **Reboot system now**.
+7. *(Optional — Locking Bootloader safely on `v1.0.2`+)*: Boot completely into VaultOs while still unlocked, open **CustomOtterControl** and run **Bootloader-Lock Dry-Run**. Only if it passes with zero blockers (`flags=0`, custom AVB key, air-gapped kernel), reboot to bootloader and run `fastboot flashing lock` (wipes `/data`).
 
 ---
 
@@ -144,6 +162,19 @@ Production VaultOs builds enforce a hardware-level air-gap in the kernel and Dev
 * **Developer USB-Debug Boot Image (`boot-usb-debug.img`)**:
   ```bash
   WITH_USB_DEBUG=true m bootimage vendorbootimage -j$(nproc)
+  ```
+
+### 🛡️ Verified Boot / Locked Bootloader Toggle (`WITH_AVB`)
+
+Production builds enable Android Verified Boot 2.0 by default (`WITH_AVB=true`, `vbmeta flags=0`) and automatically pick up `vendor/vaultos/security/avb_custom_key.pem` when present:
+
+* **Locked-Bootloader-Ready Production Build (Default — `WITH_AVB=true`)**:
+  ```bash
+  m bacon -j$(nproc)
+  ```
+* **Development Build Without AVB Enforcement (`vbmeta --flags 3`, CANNOT lock bootloader)**:
+  ```bash
+  WITH_AVB=false m bacon -j$(nproc)
   ```
 
 ---

@@ -11,11 +11,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Planned
 - Automated in-OS OTA update checker & Ed25519 verification client.
 - European sovereign mirror setup (Hetzner, Germany).
-- Hardware attestation & bootloader re-locking with custom AVB root-of-trust.
+- Verified Boot / Custom AVB 2.0 Root-of-Trust for locked bootloader: delivered in `1.0.2` (`WITH_AVB ?= true` + `avb_custom_key`). Remaining future work: release-key APK platform signing (`PRODUCT_DEFAULT_DEV_CERTIFICATE`) and `user` build type hardening.
+
+---
+
+## [1.0.2] - 2026-11-15
+
+> [!NOTE]
+> **RELEASE DISCLAIMER — UNOFFICIAL COMMUNITY BUILD WITH CUSTOM AVB 2.0 ROOT-OF-TRUST**
+>
+> - This `v1.0.2` release (`vaultos_otter`) is an unofficial community build (`eng`/`userdebug` lineage build string still carries `UNOFFICIAL-otter` / `test-keys` for APEX/APK Java signing), **with full Android Verified Boot (AVB 2.0) enabled (`vbmeta` & `vbmeta_system` `Flags: 0`, `SHA256_RSA4096`) and signed with the VaultOs custom AVB key (`avb_custom_key.bin`)**.
+> - On **SHIFTphone 8 (`otter`)**, you **CAN** lock the bootloader with this `v1.0.2` release **only after**:
+>   1. Flashing `vbmeta.img`, `vbmeta_system.img`, and enrolling `avb_custom_key` (`fastboot flash avb_custom_key avb_custom_key.bin`),
+>   2. Flashing `boot.img` / `vendor_boot.img` / `dtbo.img` and sideloading `vaultos_otter-ota.zip`, and
+>   3. Running and passing the built-in **CustomOtterControl -> OEM Lock Readiness Check** dry-run inside the booted OS.
+> - **Do NOT lock the bootloader** on earlier releases (`v1.0.0`, `v1.0.1`), on debug boot images if mismatched, or on self-built images compiled without `WITH_AVB=true` and a custom private AVB key (those are unofficial unsigned/`--flags 3` builds and **cannot run with a locked bootloader**).
+
+### Added
+- **Bootloader Lock-Ready Production Default (`WITH_AVB ?= true`)**:
+  - Updated `BoardConfig.mk` (`device/shift/otter`, commit `f231af1`) so Verified Boot (`WITH_AVB ?= true`) is enabled by default for production builds and automatically picks up `vendor/vaultos/security/avb_custom_key.pem` (`SHA256_RSA4096`) when present (`vbmeta` & `vbmeta_system` `Flags: 0`, `avbtool info_image` verified).
+  - `avb_custom_key.bin` (SHA-256: `54085da319aa83befe4e8df03aaeb2f992b4f6940ac8865d855d3bc6419664ed`, SHA-1: `494589df304dbee089f10c21b25b07511794f9b5`) is published with the release for `fastboot flash avb_custom_key avb_custom_key.bin`.
+  - Updated `vendor/vaultos/.gitignore` (`3e48215`) so private keys (`*.pem`, `*.key`, `*.pk8`) are never committed.
+- **New OLED Default Wallpaper (`VaultOs powered by Bastegra`)**:
+  - Generated `default_wallpaper.png` (`1080x2400`, pure OLED black background matching `bootanimation.zip` neon-teal/cyan glowing arcs and white `V` emblem, `"V A U L T   O S"` title, and `"VaultOs powered by Bastegra"` slogan) across all 7 `FrameworkResVaultOs` resource buckets (`drawable-hdpi`, `drawable-nodpi`, `drawable-sw600dp-nodpi`, `drawable-sw720dp-nodpi`, `drawable-xhdpi`, `drawable-xxhdpi`, `drawable-xxxhdpi`).
+- **CustomOtterControl & App Suite Updates**:
+  - Added **OEM Lock Readiness Dry-Run Check** inside `CustomOtterControl` to verify AVB state, vbmeta digest, custom key enrollment readiness, and partition integrity before locking the bootloader.
+  - Added **SD Card `.zip` Provisioning Importer** & **Mandatory APK Update** handler (`CustomOtterControl`).
+  - Implemented roadmap features `001`, `003`, `004`, `006`, `009`, and `011`.
+  - Deactivated `FancyLauncher` from the bundled app suite.
+- **Release & Installer Updates**:
+  - Updated `vaultos_installer.py` and `README.md` for `v1.0.2` (`vbmeta.img`, `vbmeta_system.img`, `avb_custom_key.bin`) and added explicit locked-bootloader disclaimers across all releases (`v1.0.0`, `v1.0.1`, `v1.0.2`).
+
+### Cryptographic Checksums (SHA-256)
+| Artifact | Size (Bytes) | SHA-256 |
+|---|---|---|
+| `boot.img` | 100663296 | `a62764f8d2211b3ba671d902ba9448625607360e48f46c1e38423ff2a47db482` |
+| `vendor_boot.img` | 100663296 | `d2225c48c101588d3458b18e358addd5e28da0fc2dc6c3e7f02115b521fd82e4` |
+| `dtbo.img` | 25165824 | `85e05880e32d65a2d76b8db9393f0adb9883654f4491bb1d25bb874e9a56c837` |
+| `vbmeta.img` | 65536 | `04e18ceed5052d545b194df32e045b95606384c7ffb897da3bd1df446f5673dd` |
+| `vbmeta_system.img` | 65536 | `8dd94087d0da5013d14a1accb155e44b9d7f75003ddf3a12ccf5b467296d75a6` |
+| `avb_custom_key.bin` | 1032 | `54085da319aa83befe4e8df03aaeb2f992b4f6940ac8865d855d3bc6419664ed` |
+| `boot-usb-debug.img` | 100663296 | `ec093bb510c19f19dab553301a59301cc4786b1ccd247a2f860341a82bcffd84` |
+| `vendor_boot-usb-debug.img` | 100663296 | `c00516e8bedda1f1ca0652307404a36244343cf306c1d827d108a4f48d9642d8` |
+| `vaultos_otter-ota.zip` | 1853708679 | `5c879030bba2e7aa8b42c0d53171b9dd42b2d4185e3d03d4157e2f1945869aec` |
 
 ---
 
 ## [1.0.1] - 2026-11-15
+
+> [!CAUTION]
+> **DISCLAIMER — UNOFFICIAL UNSIGNED BUILD (CANNOT RUN WITH LOCKED BOOTLOADER)**
+>
+> `v1.0.1` is an unofficial unsigned build generated with `vbmeta flags=3` (`--flags 3`, AVB verification disabled) and default AOSP test-keys. **It CANNOT run with a locked bootloader** — running `fastboot flashing lock` on `v1.0.1` will halt boot (`device is corrupt`). Upgrade to `v1.0.2` (with `avb_custom_key.bin`) before locking the bootloader.
 
 ### Fixed
 - **Critical — `CustomOtterControl` False-Positive Wipe & Wakelock Fixes**:
@@ -53,6 +100,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [1.0.0] - 2026-11-14 *(Pre-Release — Superseded by 1.0.1)*
+
+> [!CAUTION]
+> **DISCLAIMER — UNOFFICIAL UNSIGNED BUILD (CANNOT RUN WITH LOCKED BOOTLOADER)**
+>
+> `v1.0.0` is an unofficial unsigned pre-release build generated with `vbmeta flags=3` (`--flags 3`, AVB verification disabled) and default AOSP test-keys. **It CANNOT run with a locked bootloader** — running `fastboot flashing lock` on `v1.0.0` will halt boot (`device is corrupt`). Upgrade to `v1.0.2` (with `avb_custom_key.bin`) before locking the bootloader.
 
 ### Added
 - **Initial Official VaultOs Release** for the **SHIFTphone 8 (`otter`)**.

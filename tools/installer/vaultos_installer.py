@@ -19,12 +19,21 @@ import subprocess
 import urllib.request
 import urllib.error
 
-VERSION = "1.0.0"
+VERSION = "1.0.2"
 GITHUB_REPO = "Hatzen/VaultOs"
 API_URL = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest"
 EXPECTED_PRODUCT = "otter"
 
-REQUIRED_ASSETS = ["boot.img", "vendor_boot.img", "dtbo.img", "vaultos_otter-ota.zip", "SHA256SUMS"]
+REQUIRED_ASSETS = [
+    "boot.img",
+    "vendor_boot.img",
+    "dtbo.img",
+    "vbmeta.img",
+    "vbmeta_system.img",
+    "avb_custom_key.bin",
+    "vaultos_otter-ota.zip",
+    "SHA256SUMS",
+]
 
 def print_banner():
     banner = f"""
@@ -43,22 +52,28 @@ def print_banner():
 
 def print_security_warning():
     warning = """
-[!] THREAT MODEL & SECURITY ADVISORY:
+[!] THREAT MODEL, UNOFFICIAL BUILD & BOOTLOADER LOCK DISCLAIMER:
 ------------------------------------------------------------------------
 1. ISP / NETWORK INJECTION PREVENTION:
    Untrusted Wi-Fi networks, captive portals, and ISP routing can spoof
    unencrypted firmware endpoints. All downloads in this installer are
    verified against SHA-256 cryptographic digests.
 
-2. BOOTLOADER LOCK WARNING (HARD-BRICK RISK):
-   Do NOT attempt to re-lock the bootloader ('fastboot flashing lock')
-   after flashing unsigned community images or images without your custom
-   AVB root key installed. Locking an untrusted image causes an irreversible
-   device brick.
+2. UNOFFICIAL / UNSIGNED BUILDS vs. LOCKED BOOTLOADER WARNING:
+   * Unofficial / unsigned builds and legacy releases (v1.0.0 / v1.0.1
+     with vbmeta flags=3) CANNOT run with a locked bootloader. Running
+     'fastboot flashing lock' on those builds halts boot (device is
+     corrupt / brick risk).
+   * Production v1.0.2+ builds have WITH_AVB=true enabled by default and
+     include vbmeta.img, vbmeta_system.img, and avb_custom_key.bin so they
+     CAN run with a locked bootloader ONLY after enrolling the custom AVB
+     key, completing a full unlocked boot, and confirming that
+     CustomOtterControl -> Bootloader-Lock Dry-Run passes cleanly BEFORE
+     running 'fastboot flashing lock'.
 
 3. DATA LOSS:
-   Flashing a new OS requires formatting the data partition. Ensure you
-   have backed up all private keys and offline data.
+   Flashing a new OS (and locking the bootloader) formats the /data
+   partition. Ensure you have backed up all private keys and data.
 ------------------------------------------------------------------------
 """
     print(warning)
@@ -205,14 +220,21 @@ def flash_device(download_dir):
     print("    BEGINNING FLASH PROCESS")
     print("="*70)
 
-    # Step 1: Flash core boot images
-    for part in ["boot", "vendor_boot", "dtbo"]:
+    # Step 1: Flash core boot and AVB verification partitions
+    for part in ["boot", "vendor_boot", "dtbo", "vbmeta", "vbmeta_system"]:
         img_file = os.path.join(download_dir, f"{part}.img")
         print(f"[*] Flashing {part} partition ({os.path.basename(img_file)})...")
         res = subprocess.run(["fastboot", "flash", part, img_file])
         if res.returncode != 0:
             print(f"[ERROR] Failed to flash {part}!")
             sys.exit(1)
+
+    avb_key = os.path.join(download_dir, "avb_custom_key.bin")
+    if os.path.exists(avb_key):
+        print(f"[*] Enrolling VaultOs custom AVB public key ({os.path.basename(avb_key)})...")
+        res = subprocess.run(["fastboot", "flash", "avb_custom_key", avb_key])
+        if res.returncode != 0:
+            print("[WARN] 'fastboot flash avb_custom_key' returned non-zero (continuing with unlocked bootloader).")
 
     # Step 2: Reboot to recovery
     print("\n[*] Rebooting device into LineageOS/VaultOs Recovery...")
