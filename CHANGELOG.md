@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [1.0.1] - 2026-11-14
+## [1.0.1] - 2026-11-15
 
 ### Fixed
 - **Critical — `CustomOtterControl` False-Positive Wipe & Wakelock Fixes**:
@@ -31,11 +31,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Custom Bootanimation & Default Wallpaper Enforcement**:
   - Set `TARGET_BOOTANIMATION := vendor/vaultos/media/bootanimation.zip` in `BoardConfig.mk`.
   - Removed `theme:` nesting from `FrameworkResVaultOs`, `SystemUIResVaultOs`, and `SettingsProviderResVaultOs` so Android 16 scans static RROs in `/product/overlay/`, and populated all density buckets for `default_wallpaper.png`.
+- **Prebuilt KernelSU-Next Packaging**:
+  - Added `preprocessed: true` and `skip_preprocessed_apk_checks: true` for `KernelSU` (`KernelSU_Next_v3.3.0_33214-release.apk`, `targetSdkVersion=36`) to preserve its upstream v2 signature.
 
 ### Added
 - **Multi-Root Workspace & Prebuilt Release Pipeline**:
   - Added `VaultOs.code-workspace` for unified Git source control across all 9 VaultOs repositories.
   - Added `tools/pipeline/update_prebuilt_apps.ps1` and `.sh` to compile and stage release APKs for `CustomOtterControl` and `ParAnnoying`.
+
+### Cryptographic Checksums (SHA-256)
+
+| Artifact | Size | SHA-256 Checksum |
+| :--- | :--- | :--- |
+| `boot.img` | 96.0 MiB | `4487e5047ad6be001d7d9854f236995ae429f266672d812a5995b285dada8046` |
+| `vendor_boot.img` | 96.0 MiB | `cd604194d3a5b87746a4a689f9c90c377db1733d3c03943c3411f1c073f0ccfd` |
+| `dtbo.img` | 24.0 MiB | `eb0c4fc48bb3d2427160e9581712d491859a3f14eba256ae681be73549fe3469` |
+| `boot-usb-debug.img` | 96.0 MiB | `57dca85fb0b3b970e954fbd3daa678be9bdcdab14fe8e6d16c30f91d9753b27c` |
+| `vendor_boot-usb-debug.img` | 96.0 MiB | `b98ea61a85ffe8477ebdbf3ba3f2fbe5f3f3c44ecae9ffaef1c28451f8ee0f90` |
+| `vaultos_otter-ota.zip` | 1.73 GiB | `9667150c57dd91adccc59dddc2c53f2c43b4bdc56d875a98e617836074191e7c` |
 
 ---
 
