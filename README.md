@@ -44,6 +44,11 @@ VaultOs Platform
 └── Hatzen/android_packages_apps_SetupWizard # Offline provisioning setup wizard
 ```
 
+> [!IMPORTANT]
+> **Release Gate Policy — Mandatory SHIFTphone 8 Hardware Test**
+>
+> **Every VaultOs release MUST be flashed and hardware-verified on a physical SHIFTphone 8 (`otter`) before publishing on GitHub Releases** (boot sanity, `KernelSU-Next` root verification, `copy_assets`/Kiwix provisioning, `CustomOtterControl` checks, and final `WITH_USB_DEBUG=false` USB air-gap verification). See the full checklist in `vaultos-concept/guides/release-checklist.md`.
+
 ---
 
 ## ⚡ Flashing VaultOs
