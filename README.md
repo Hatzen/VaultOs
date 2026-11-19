@@ -21,13 +21,13 @@ Modern smartphones are built on continuous data extraction, opaque telemetry, re
 
 | Device | Codename | Platform | Android Version | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **SHIFTphone 8** | `otter` | Qualcomm Yupik / QCM6490 | **16 (BP4A / LineageOS 23.2)** | **Active (`v1.0.2` AVB 2.0)** |
+| **SHIFTphone 8** | `otter` | Qualcomm Yupik / QCM6490 | **16 (BP4A / LineageOS 23.2)** | **Active (`v1.0.3` — Unlocked Bootloader Only; Closed Bootloader in `v2.0`)** |
 
-> [!WARNING]
-> **DISCLAIMER — Unofficial Builds vs. Locked Bootloader Support**
+> [!CAUTION]
+> **DISCLAIMER — Bootloader Lock Status (`v1.0.x` = `LOCKED_BOOTLOADER_SUPPORTED=false`)**
 >
-> * **Unofficial / Unsigned Builds (including legacy releases `v1.0.0` & `v1.0.1`)**: Any unofficial build compiled without a private `avb_custom_key.pem` and `WITH_AVB=true` (i.e. `vbmeta flags=3` / AOSP public `testkey`) is an **unofficial unsigned build that CANNOT run with a locked bootloader**. Executing `fastboot flashing lock` on such a build will fail Verified Boot (`device is corrupt`).
-> * **Production `v1.0.2`+ Builds (`WITH_AVB=true` default)**: Built with Android Verified Boot 2.0 enabled (`vbmeta flags=0`) and signed with the VaultOs custom AVB key (`avb_custom_key.bin`). These builds **can** run with a locked bootloader once you enroll `avb_custom_key.bin` while unlocked, complete a full first boot, and verify **`CustomOtterControl` → Bootloader-Lock Dry-Run** reports `✅ BEREIT FUER CLOSED BOOTLOADER` before running `fastboot flashing lock`.
+> * **`v1.0.3` (and all `v1.0.x` releases) MUST stay on an UNLOCKED bootloader**: Although `v1.0.3` builds with `WITH_AVB=true` (`vbmeta flags=0`) and extracts `vbmeta`/`boot`/`vendor_boot`/`dtbo` directly from `vaultos_otter-ota.zip` (`payload.bin`) via `tools/pipeline/extract_ota_images.py`, closed-bootloader booting + OEM-locked recovery has **not** passed end-to-end hardware verification yet.
+> * **DO NOT run `fastboot flashing lock` on `v1.0.x`**: Locking while `fastboot flashing get_unlock_ability` is `0` or with unverified `dm-verity` / closed-boot state can permanently block re-unlocking. Full verified closed-bootloader support is planned for **VaultOs `v2.0`**.
 
 ---
 
@@ -83,22 +83,22 @@ python tools/installer/vaultos_installer.py
   * `SHA256SUMS`
 
 > [!CAUTION]
-> **Check Release Signature Before Locking Bootloader**: Legacy releases (`v1.0.0`, `v1.0.1`) and self-compiled builds without `WITH_AVB=true` are **unofficial unsigned builds that cannot run with a locked bootloader**. Never lock the bootloader on those builds.
+> **Unlocked Bootloader Only (`v1.0.x`)**: All `v1.0.x` releases (`v1.0.0` - `v1.0.3`, including `release_flags.json` with `locked_bootloader_supported: false`) **cannot/must not be booted with a closed bootloader**. Keep the bootloader **unlocked** until verified closed-bootloader support lands in **`v2.0`**.
 
 #### Manual Steps
 1. **Reboot to Fastboot**:
    ```bash
    adb reboot bootloader
    ```
-2. **Flash Core Partitions**:
+2. **Flash Temporary USB-Debug Boot & Core Partitions for Sideload** (production `boot.img`/`vendor_boot.img` disable USB even in Recovery; `vaultos_otter-ota.zip` installs the matched air-gapped production images onto the target slot):
    ```bash
-   fastboot flash boot boot.img
-   fastboot flash vendor_boot vendor_boot.img
+   fastboot flash boot boot-usb-debug.img
+   fastboot flash vendor_boot vendor_boot-usb-debug.img
    fastboot flash dtbo dtbo.img
    fastboot flash vbmeta vbmeta.img
    fastboot flash vbmeta_system vbmeta_system.img
    ```
-3. **Optional (only for `v1.0.2`+ AVB Lock-Ready builds) — Enroll Custom AVB Key**:
+3. **Optional — Enroll Custom AVB Key** (keep bootloader **unlocked** afterwards on `v1.0.x`):
    ```bash
    fastboot flash avb_custom_key avb_custom_key.bin
    ```
@@ -112,8 +112,7 @@ python tools/installer/vaultos_installer.py
      ```bash
      adb sideload vaultos_otter-ota.zip
      ```
-6. *(First install only)*: In recovery, select **Factory reset / Format data** $\rightarrow$ **Reboot system now**.
-7. *(Optional — Locking Bootloader safely on `v1.0.2`+)*: Boot completely into VaultOs while still unlocked, open **CustomOtterControl** and run **Bootloader-Lock Dry-Run**. Only if it passes with zero blockers (`flags=0`, custom AVB key, air-gapped kernel), reboot to bootloader and run `fastboot flashing lock` (wipes `/data`).
+6. *(First install only)*: In recovery, select **Factory reset / Format data** $\rightarrow$ **Reboot system now**. Keep bootloader **unlocked** on `v1.0.3` (closed-bootloader support is targeted for `v2.0`).
 
 ---
 

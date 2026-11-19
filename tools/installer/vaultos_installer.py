@@ -19,9 +19,10 @@ import subprocess
 import urllib.request
 import urllib.error
 
-VERSION = "1.0.2"
+VERSION = "1.0.3"
+LOCKED_BOOTLOADER_SUPPORTED = False
 GITHUB_REPO = "Hatzen/VaultOs"
-API_URL = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest"
+API_URL = f"https://api.github.com/repos/{GITHUB_REPO}/releases/tags/v{VERSION}"
 EXPECTED_PRODUCT = "otter"
 
 REQUIRED_ASSETS = [
@@ -31,9 +32,14 @@ REQUIRED_ASSETS = [
     "vbmeta.img",
     "vbmeta_system.img",
     "avb_custom_key.bin",
+    "boot-usb-debug.img",
+    "vendor_boot-usb-debug.img",
     "vaultos_otter-ota.zip",
+    "release_flags.json",
     "SHA256SUMS",
 ]
+
+OPTIONAL_ASSETS = {"release_flags.json", "avb_custom_key.bin"}
 
 def print_banner():
     banner = f"""
@@ -59,17 +65,15 @@ def print_security_warning():
    unencrypted firmware endpoints. All downloads in this installer are
    verified against SHA-256 cryptographic digests.
 
-2. UNOFFICIAL / UNSIGNED BUILDS vs. LOCKED BOOTLOADER WARNING:
-   * Unofficial / unsigned builds and legacy releases (v1.0.0 / v1.0.1
-     with vbmeta flags=3) CANNOT run with a locked bootloader. Running
-     'fastboot flashing lock' on those builds halts boot (device is
-     corrupt / brick risk).
-   * Production v1.0.2+ builds have WITH_AVB=true enabled by default and
-     include vbmeta.img, vbmeta_system.img, and avb_custom_key.bin so they
-     CAN run with a locked bootloader ONLY after enrolling the custom AVB
-     key, completing a full unlocked boot, and confirming that
-     CustomOtterControl -> Bootloader-Lock Dry-Run passes cleanly BEFORE
-     running 'fastboot flashing lock'.
+2. UNOFFICIAL / UNLOCKED-ONLY RELEASES vs. LOCKED BOOTLOADER WARNING:
+   * Releases v1.0.0 - v1.0.3 (and any build without explicit v2.0+ lock
+     verification) are FLAGGED AS UNLOCKED BOOTLOADER ONLY
+     (locked_bootloader_supported = false).
+   * DO NOT run 'fastboot flashing lock' on v1.0.x! Locking an unverified
+     build (or if 'fastboot flashing get_unlock_ability' == 0) can trigger
+     dm-verity / AVB boot failure and permanently lock out fastboot unlock.
+   * Keep your bootloader UNLOCKED on v1.0.3; full verified closed-bootloader
+     support is targeted for v2.0.
 
 3. DATA LOSS:
    Flashing a new OS (and locking the bootloader) formats the /data
@@ -155,6 +159,8 @@ def verify_checksums(download_dir):
     for fname, exp_hash in expected_hashes.items():
         fpath = os.path.join(download_dir, fname)
         if not os.path.exists(fpath):
+            if fname in OPTIONAL_ASSETS or fname not in REQUIRED_ASSETS:
+                continue
             print(f"    [FAIL] Missing file: {fname}")
             all_ok = False
             continue
@@ -215,14 +221,46 @@ def verify_hardware_model():
         sys.exit(1)
     print("    -> Bootloader state: UNLOCKED.")
 
+def check_release_flags(download_dir):
+    """Return (locked_supported, reason) from release_flags.json or release defaults."""
+    flags_path = os.path.join(download_dir, "release_flags.json")
+    if os.path.exists(flags_path):
+        try:
+            with open(flags_path, "r", encoding="utf-8") as f:
+                flags = json.load(f)
+            return bool(flags.get("locked_bootloader_supported", False)), flags.get(
+                "locked_bootloader_reason", ""
+            )
+        except Exception as e:
+            print(f"[WARN] Could not parse release_flags.json ({e}); treating locked bootloader as UNSUPPORTED.")
+            return False, ""
+    return LOCKED_BOOTLOADER_SUPPORTED, ""
+
 def flash_device(download_dir):
     print("\n" + "="*70)
     print("    BEGINNING FLASH PROCESS")
     print("="*70)
 
-    # Step 1: Flash core boot and AVB verification partitions
-    for part in ["boot", "vendor_boot", "dtbo", "vbmeta", "vbmeta_system"]:
-        img_file = os.path.join(download_dir, f"{part}.img")
+    locked_supported, lock_reason = check_release_flags(download_dir)
+    if not locked_supported:
+        print("\n[!] NOTICE: This release carries LOCKED_BOOTLOADER_SUPPORTED = false.")
+        if lock_reason:
+            print(f"    Reason: {lock_reason}")
+        print("    Keep your bootloader UNLOCKED after flashing (do NOT run 'fastboot flashing lock').\n")
+
+    # Step 1: Flash USB-debug boot/vendor_boot on current slot so Lineage Recovery
+    # has USB enabled for `adb sideload`; the OTA zip writes the matched production
+    # air-gapped boot/vendor_boot/dtbo/vbmeta/super to the inactive target slot.
+    boot_usb = os.path.join(download_dir, "boot-usb-debug.img")
+    vboot_usb = os.path.join(download_dir, "vendor_boot-usb-debug.img")
+    step1_parts = [
+        ("boot", boot_usb if os.path.exists(boot_usb) else os.path.join(download_dir, "boot.img")),
+        ("vendor_boot", vboot_usb if os.path.exists(vboot_usb) else os.path.join(download_dir, "vendor_boot.img")),
+        ("dtbo", os.path.join(download_dir, "dtbo.img")),
+        ("vbmeta", os.path.join(download_dir, "vbmeta.img")),
+        ("vbmeta_system", os.path.join(download_dir, "vbmeta_system.img")),
+    ]
+    for part, img_file in step1_parts:
         print(f"[*] Flashing {part} partition ({os.path.basename(img_file)})...")
         res = subprocess.run(["fastboot", "flash", part, img_file])
         if res.returncode != 0:
@@ -263,6 +301,8 @@ def flash_device(download_dir):
     print("    FLASHING COMPLETED SUCCESSFULLY!")
     print("="*70)
     print("Select 'Reboot system now' on the phone screen to boot into VaultOs.")
+    if not locked_supported:
+        print("[IMPORTANT] Keep the bootloader UNLOCKED on this release (locked bootloader support targeted for v2.0).")
 
 def main():
     print_banner()
@@ -293,11 +333,13 @@ def main():
     # Download required assets
     for asset_name in REQUIRED_ASSETS:
         target_path = os.path.join(work_dir, asset_name)
-        if os.path.exists(target_path) and asset_name != "SHA256SUMS":
+        if os.path.exists(target_path) and asset_name not in {"SHA256SUMS", "release_flags.json"}:
             print(f"[*] Found existing local file: {asset_name} (skipping download).")
             continue
         if asset_name in asset_urls:
             download_file(asset_urls[asset_name], target_path)
+        elif asset_name in OPTIONAL_ASSETS:
+            print(f"[*] Optional metadata asset '{asset_name}' not attached; continuing.")
         else:
             print(f"[ERROR] Asset '{asset_name}' not found in release assets!")
             sys.exit(1)

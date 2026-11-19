@@ -8,10 +8,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 ## [Unreleased]
-### Planned
+### Planned (`v2.0` Target)
+- End-to-end **Closed / Locked Bootloader + OEM Unlock Disabled** verification on SHIFTphone 8 (`otter`) using unified `payload.bin`-extracted AVB images, `/frp` (`get_unlock_ability == 1`) pre-flight gate, and `user` release-key hardening (`PRODUCT_DEFAULT_DEV_CERTIFICATE`).
 - Automated in-OS OTA update checker & Ed25519 verification client.
 - European sovereign mirror setup (Hetzner, Germany).
-- Verified Boot / Custom AVB 2.0 Root-of-Trust for locked bootloader: delivered in `1.0.2` (`WITH_AVB ?= true` + `avb_custom_key`). Remaining future work: release-key APK platform signing (`PRODUCT_DEFAULT_DEV_CERTIFICATE`) and `user` build type hardening.
+
+---
+
+## [1.0.3] - 2026-11-19
+
+> [!CAUTION]
+> **RELEASE FLAG — `locked_bootloader_supported: false` (UNLOCKED BOOTLOADER ONLY)**
+>
+> - **DO NOT LOCK THE BOOTLOADER ON `v1.0.3`**: This release carries explicit metadata flag `locked_bootloader_supported: false` (`release_flags.json`). While `v1.0.3` compiles with `WITH_AVB=true` (`vbmeta flags=0`) and now extracts standalone fastboot images directly from `vaultos_otter-ota.zip`'s `payload.bin` via `tools/pipeline/extract_ota_images.py` so `vbmeta*` and `super` match byte-for-byte, **booting with a closed/locked bootloader is NOT supported or verified in `v1.0.3`**.
+> - Keep your SHIFTphone 8 (`otter`) bootloader **unlocked** on `v1.0.3`. Full verified closed-bootloader support is scheduled for **`v2.0`**.
+
+### Added & Fixed
+- **SELinux Enforcing Active**:
+  - Removed `androidboot.selinux=permissive` from `BoardConfig.mk` (`android_device_shift_otter`) and cleaned up `vendor_init` property labels (`ro.adb.secure=0` removed; `config.disable_telephony=true` moved cleanly to system product props) so production `v1.0.3` boots cleanly in **SELinux Enforcing**.
+- **Baseband Air-Gap GPS UX (`ADR 006` Option A)**:
+  - Removed the misleading Location Quick Settings tile when `ro.vaultos.gps.hardware_disabled=true` (`frameworks/base` `LocationTile` & `LocationTileDataInteractor`).
+  - Locked Settings Location switch OFF with clear EN/DE Hardware Air-Gap explanations (`packages/apps/Settings` + `SettingsResVaultOs`, `SettingsProviderResVaultOs` `def_location_mode=0`).
+  - Kept `gnss_service` running (preventing the 66-second `GnssNative.isSupported()` Watchdog bootloop) while keeping `loc_launcher` stopped and `pil_modem: qcom,mss@4080000` disabled in DTB.
+- **Release Pipeline, Installer & Safety Hardening**:
+  - Added [`tools/pipeline/extract_ota_images.py`](tools/pipeline/extract_ota_images.py) so release `boot.img`, `vendor_boot.img`, `dtbo.img`, `vbmeta.img`, and `vbmeta_system.img` are extracted directly from `vaultos_otter-ota.zip` (`payload.bin`) and verified against AVB public keys, `selinux=permissive` absence, and DTB air-gap node states — preventing `$OUT/*.img` vs. OTA `super` dm-verity mismatches.
+  - Updated [`tools/installer/vaultos_installer.py`](tools/installer/vaultos_installer.py) to `v1.0.3`, added `release_flags.json` (`locked_bootloader_supported: false`) checking, and fixed Recovery USB sideload flow (`boot-usb-debug.img` / `vendor_boot-usb-debug.img` before `reboot recovery` so `adb sideload` sees the device before the OTA writes the air-gapped slot).
+  - Updated `CustomOtterControl` `BootloaderLockSafetyChecker.kt` to query `su -c getenforce` (fixing `priv_app` `Permission Denied` warning under SELinux Enforcing), check both `vbmeta` and `vbmeta_system`, and block if `/dev/block/bootdevice/by-name/frp` unlock flag is `0x00` (`get_unlock_ability == 0`).
+
+### Cryptographic Checksums (SHA-256)
+| Artifact | Size (Bytes) | SHA-256 |
+|---|---|---|
+| `boot.img` | 100663296 | `a01e262396b5aaf3abdae26cdadc280e6f4125290e4ea65edf2c13643fb6dbd5` |
+| `vendor_boot.img` | 100663296 | `881cb665548255591de1316e32661043b3eddfb9d485ee1f22a42b47bc91b73d` |
+| `dtbo.img` | 25165824 | `f3dbe79d8a07c1c07b5145d24c0ea55b3d5316dbebfb282bad19122e678a9137` |
+| `vbmeta.img` | 8192 | `7b03ee1942f58016f4276b84774425f633aece0d2d84037bc60948346bcbba96` |
+| `vbmeta_system.img` | 4096 | `69423a0d6fbd3149362741b2eb44f482ccfd822ad7a181ac0520d5c01b328548` |
+| `avb_custom_key.bin` | 1032 | `54085da319aa83befe4e8df03aaeb2f992b4f6940ac8865d855d3bc6419664ed` |
+| `boot-usb-debug.img` | 100663296 | `0cb3536c75b7d7c3e066a089931200fd12b75feb1c6cf063e37133d1229799cb` |
+| `vendor_boot-usb-debug.img` | 100663296 | `96a4267b9f637aaf3a1052c7f395ee4b3b423f76ad5f2253d70b8bd33e64bd12` |
+| `vaultos_otter-ota.zip` | 1867451661 | `c757849607b153a6129a0aa59d7bcc05517cbed90b91e6c127e181f06754a77e` |
+| `release_flags.json` | 455 | `155ac9989537c0a25109a2809a1064bcca717540e97fbdedd5a5cfe33dbc8490` |
 
 ---
 
