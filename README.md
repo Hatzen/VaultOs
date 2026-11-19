@@ -55,7 +55,7 @@ VaultOs Platform
 
 ### Option A: Automated Standalone Installer (Recommended)
 
-VaultOs includes a zero-dependency, cross-platform CLI installer for Linux, macOS, and Windows that handles downloads, cryptographic SHA-256 validation, device codename assertion, and guided flashing automatically:
+VaultOs includes a zero-dependency, cross-platform CLI installer for Linux, macOS, and Windows that handles downloads, cryptographic SHA-256 validation, OTA-vs-image AVB consistency verification, multi-device `-s` targeting, optional pre-install unlock gating (`get_unlock_ability == 1`), and guided Recovery USB sideloading automatically:
 
 ```bash
 # 1. Clone repository
@@ -64,6 +64,12 @@ cd VaultOs
 
 # 2. Run the installer (requires python 3.8+ and platform-tools in PATH)
 python tools/installer/vaultos_installer.py
+
+# Optional flags:
+#   --offline --dir <path>   Flash from locally staged release artifacts
+#   --serial <id>            Target a specific device when emulators/other phones are attached
+#   --tag v1.0.3             Select a specific GitHub release tag
+#   --lock                   Gated bootloader-lock flow (blocked on v1.0.x; v2.0+ only)
 ```
 
 ---
