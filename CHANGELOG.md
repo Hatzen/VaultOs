@@ -47,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `boot-usb-debug.img` | 100663296 | `0cb3536c75b7d7c3e066a089931200fd12b75feb1c6cf063e37133d1229799cb` |
 | `vendor_boot-usb-debug.img` | 100663296 | `96a4267b9f637aaf3a1052c7f395ee4b3b423f76ad5f2253d70b8bd33e64bd12` |
 | `vaultos_otter-ota.zip` | 1867451661 | `c757849607b153a6129a0aa59d7bcc05517cbed90b91e6c127e181f06754a77e` |
-| `release_flags.json` | 455 | `155ac9989537c0a25109a2809a1064bcca717540e97fbdedd5a5cfe33dbc8490` |
+| `release_flags.json` | 456 | `dd5c9376efbcc0bce8ffe6f2454ba0fc8bf96bdb9a84a06545a80993e1c60765` |
 
 ---
 
